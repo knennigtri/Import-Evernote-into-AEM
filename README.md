@@ -7,7 +7,9 @@ Evernote: https://evernote.com/
 The main parts are:
 
 * core: Java code to actually create the import from Evernote. Currently the integration works specifically with Evernote Clipper
+
 	https://evernote.com/webclipper/
+
 * ui.apps: Code for creating a basic Evernote component and a page to display it on
 * ui.content: A basic website to use the Evernote component
 
