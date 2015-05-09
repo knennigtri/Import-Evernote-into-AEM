@@ -1,0 +1,6 @@
+org/demo/nennig/evernote/core/impl/filters/LoggingFilter.class
+org/demo/nennig/evernote/core/EvernoteAccountInst.class
+org/demo/nennig/evernote/core/impl/schedulers/EvernoteSyncScheduledTask.class
+org/demo/nennig/evernote/core/SyncService.class
+org/demo/nennig/evernote/core/package-info.class
+org/demo/nennig/evernote/core/impl/EvernoteSyncServiceImpl.class

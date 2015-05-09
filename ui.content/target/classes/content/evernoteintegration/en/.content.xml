@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content
+        cq:allowedTemplates="/apps/evernoteintegration/templates/page"
+        cq:designPath="/etc/designs/evernoteintegration"
+        cq:lastModified="{Date}2015-03-19T02:59:46.629-06:00"
+        cq:lastModifiedBy="admin"
+        cq:template="/apps/evernoteintegration/templates/homepage"
+        jcr:lastModified="{Date}2014-05-27T10:22:52.400+02:00"
+        jcr:lastModifiedBy="admin"
+        jcr:primaryType="nt:unstructured"
+        jcr:title="English"
+        sling:resourceType="evernoteintegration/components/page/page-home">
+        <par
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="foundation/components/parsys">
+            <title
+                jcr:lastModified="{Date}2015-03-19T02:59:46.628-06:00"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Example Project for Evernote"
+                sling:resourceType="evernoteintegration/components/content/title"
+                type="extralarge"/>
+            <title_0
+                jcr:created="{Date}2014-06-17T12:17:07.586+02:00"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2014-06-17T12:17:13.480+02:00"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                jcr:title="&#xa;Service Component&#xa;"
+                sling:resourceType="evernoteintegration/components/content/title"/>
+            <servicecomponent
+                jcr:created="{Date}2014-06-17T12:17:15.546+02:00"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2014-06-17T12:17:15.546+02:00"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="evernoteintegration/components/content/servicecomponent"/>
+            <evernote
+                jcr:created="{Date}2015-03-19T02:39:44.668-06:00"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2015-03-19T02:39:44.668-06:00"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="evernoteintegration/components/content/evernote"/>
+            <image_1
+                jcr:created="{Date}2014-05-26T17:52:39.201+02:00"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2014-06-16T17:58:21.537+02:00"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="foundation/components/image"
+                fileName="banner.png">
+                <file/>
+            </image_1>
+        </par>
+    </jcr:content>
+</jcr:root>

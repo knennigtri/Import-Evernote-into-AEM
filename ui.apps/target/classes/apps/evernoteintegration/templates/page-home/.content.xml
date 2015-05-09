@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:description="Generic template for Evernote Integration Site Home Pages"
+    jcr:primaryType="cq:Template"
+    jcr:title="Evernote Integration Site Home Page"
+    allowedPaths="/content/evernoteintegration(/.*)?"
+    ranking="{Long}90">
+    <jcr:content
+        cq:allowedTemplates="/apps/evernoteintegration/templates/page"
+        cq:designPath="/etc/designs/evernoteintegration"
+        cq:template="/apps/evernoteintegration/templates/homepage"
+        jcr:primaryType="cq:PageContent"
+        sling:resourceType="evernoteintegration/components/page/page-home">
+        <par
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="foundation/components/parsys"/>
+    </jcr:content>
+</jcr:root>

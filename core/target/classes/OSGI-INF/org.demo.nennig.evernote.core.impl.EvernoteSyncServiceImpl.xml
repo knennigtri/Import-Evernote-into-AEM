@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
+    <scr:component immediate="true" name="org.demo.nennig.evernote.core.impl.EvernoteSyncServiceImpl">
+        <implementation class="org.demo.nennig.evernote.core.impl.EvernoteSyncServiceImpl"/>
+        <service servicefactory="false">
+            <provide interface="org.demo.nennig.evernote.core.SyncService"/>
+        </service>
+        <property name="service.vendor" value="Adobe"/>
+        <property name="service.pid" value="org.demo.nennig.evernote.core.impl.EvernoteSyncServiceImpl"/>
+    </scr:component>
+</components>
