@@ -24,7 +24,7 @@ The main parts are:
  
  * OSGi Configurations:
  
- ![OSGi Configs](images/screenshot_configurations.tiff)
+ ![OSGi Configs](images/screenshot_configurations.png)
 
 * ui.apps: Code for creating a basic Evernote component and a page to display it on
  * This is not fully implemented yet
