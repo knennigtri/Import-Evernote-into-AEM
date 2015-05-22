@@ -20,7 +20,7 @@
     <artifactId>evernote</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <description>Evernote Integration</description>
+    <description>Evernote Importer</description>
     
     <modules>
         <module>core</module>

@@ -33,13 +33,13 @@ import org.junit.Test;
  */
 public class TestEvernoteSyncServiceImpl {
     
-    private EvernoteSyncServiceImpl evernoteSyncService;
+    private EvernoteImportServiceImpl evernoteSyncService;
     
     private String slingId;
     
     @Before
     public void setup() throws Exception {
-        evernoteSyncService = new EvernoteSyncServiceImpl();
+        evernoteSyncService = new EvernoteImportServiceImpl();
         SlingSettingsService settings = mock(SlingSettingsService.class);
         PrivateAccessor.setField(evernoteSyncService, "settings", settings);
         slingId = UUID.randomUUID().toString();

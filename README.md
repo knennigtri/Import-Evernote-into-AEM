@@ -6,7 +6,7 @@ Evernote: https://evernote.com/
 
 The main parts are:
 
-* core: Java code to actually create the import from Evernote. Currently the integration works specifically with Evernote Clipper
+* core: Java code to create the import from Evernote. Currently the integration works specifically with Evernote Clipper. Note: Currently authentication is only supported by developer key right now.
 
 	https://evernote.com/webclipper/
 

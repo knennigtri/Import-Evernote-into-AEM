@@ -31,8 +31,8 @@
     <!-- ====================================================================== -->
     <artifactId>evernote.ui.content</artifactId>
     <packaging>content-package</packaging>
-    <name>Evernote Integration - UI content</name>
-    <description>UI content package for Evernote Integration</description>
+    <name>Evernote Importer - UI content</name>
+    <description>UI content package for Evernote Importer</description>
 
     <!-- <scm>
         <connection></connection>
@@ -117,12 +117,12 @@
                     <filterSource>${basedir}/META-INF/vault/filter.xml</filterSource>
                     <verbose>true</verbose>
                     <failOnError>true</failOnError>
-                    <group>Evernote Integration Content Package</group>
+                    <group>Evernote Importer Content Package</group>
                     <embeddeds>
                         <embedded>
                             <groupId>org.demo.nennig</groupId>
                             <artifactId>evernote.core</artifactId>
-                            <target>/apps/evernoteintegration/install</target>
+                            <target>/apps/evernote/install</target>
                         </embedded>
                     </embeddeds>
                 </configuration>

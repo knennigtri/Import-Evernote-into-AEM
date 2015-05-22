@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspaceFilter version="1.0">
-    <filter root="/apps/evernoteintegration">
-        <exclude pattern="/apps/evernoteintegration/install" />
+    <filter root="/apps/evernote">
+        <exclude pattern="/apps/evernote/install" />
     </filter>
     <filter root="/apps/sling" />
-    <filter root="/etc/designs/evernoteintegration"/>
+    <filter root="/etc/designs/evernote"/>
 </workspaceFilter>

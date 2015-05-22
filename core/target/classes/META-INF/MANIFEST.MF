@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1430496355724
-Build-Jdk: 1.8.0_31
+Bnd-LastModified: 1432284678621
+Build-Jdk: 1.7.0_71
 Built-By: nennig
 Bundle-ClassPath: .,OSGI-INF/lib/evernote-api-1.25.1.jar
-Bundle-Description: Core bundle for Evernote Integration
+Bundle-Description: Core bundle for Evernote Importer
 Bundle-ManifestVersion: 2
-Bundle-Name: Evernote Integration - Core
+Bundle-Name: Evernote Importer - Core
 Bundle-SymbolicName: org.demo.nennig.evernote.core
 Bundle-Version: 0.0.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
@@ -37,18 +37,18 @@ Import-Package: com.evernote.auth;version="[1.25,2)",com.evernote.client
  sling.api.request;version="[2.4,3)",org.apache.sling.commons.osgi;versi
  on="[2.2,3)",org.apache.sling.jcr.api;version="[2.2,3)",org.slf4j;versi
  on="[1.5,2)"
-Provide-Capability: osgi.service;effective:=active;objectClass="org.demo
- .nennig.evernote.core.SyncService";service.vendor=Adobe,osgi.service;ef
- fective:=active;objectClass="javax.servlet.Filter";service.ranking=-700
- ;sling.filter.scope=REQUEST;service.vendor=Adobe,osgi.service;effective
- :=active;objectClass="java.lang.Runnable";scheduler.expression="*/10 * 
- * * * ?";scheduler.concurrent=false;evernote.dev=false;service.vendor=A
- dobe
+Provide-Capability: osgi.service;effective:=active;objectClass="java.lan
+ g.Runnable";scheduler.expression="*/10 * * * * ?";scheduler.concurrent=
+ false;evernote.dev=false;service.vendor=Adobe,osgi.service;effective:=a
+ ctive;objectClass="javax.servlet.Filter";service.ranking=-700;sling.fil
+ ter.scope=REQUEST;service.vendor=Adobe,osgi.service;effective:=active;o
+ bjectClass="org.demo.nennig.evernote.core.ImporterService";service.vend
+ or=Adobe
 Require-Capability: osgi.service;effective:=active;filter:="(objectClass
  =org.apache.sling.jcr.api.SlingRepository)",osgi.ee;filter:="(&(osgi.ee
  =JavaSE)(version=1.7))"
-Service-Component: OSGI-INF/org.demo.nennig.evernote.core.impl.filters.L
- oggingFilter.xml,OSGI-INF/org.demo.nennig.evernote.core.impl.schedulers
- .EvernoteSyncScheduledTask.xml,OSGI-INF/org.demo.nennig.evernote.core.i
- mpl.EvernoteSyncServiceImpl.xml
+Service-Component: OSGI-INF/org.demo.nennig.evernote.core.impl.scheduler
+ s.EvernoteImporterTask.xml,OSGI-INF/org.demo.nennig.evernote.core.impl.
+ EvernoteImportServiceImpl.xml,OSGI-INF/org.demo.nennig.evernote.core.im
+ pl.filters.LoggingFilter.xml
 Tool: Bnd-2.3.0.201405100607
