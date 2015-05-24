@@ -4,7 +4,7 @@
     jcr:primaryType="sling:OrderedFolder"
     sling:resourceType="sling:redirect"
     sling:target="/geohome">
-    
+    <dam/>
     <usergenerated/>
     <rep:policy/>
     <launches/>
@@ -22,6 +22,5 @@
     <geometrixx-gov/>
     <forms/>
     <projects/>
-    <training-site/>
     <evernote/>
 </jcr:root>

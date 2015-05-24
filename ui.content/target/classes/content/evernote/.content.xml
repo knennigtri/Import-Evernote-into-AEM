@@ -8,11 +8,10 @@
         cq:lastModifiedBy="admin"
         cq:template="/apps/evernote/templates/page-home"
         jcr:primaryType="nt:unstructured"
-        jcr:title="This is my new title"
+        jcr:title="Evernote Demo"
         sling:redirect="{Boolean}true"
         sling:redirectStatus="{Long}302"
         sling:resourceType="foundation/components/redirect"
         redirectTarget="/content/evernote/en"/>
     <en/>
-    
 </jcr:root>

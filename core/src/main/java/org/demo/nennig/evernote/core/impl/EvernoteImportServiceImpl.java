@@ -31,7 +31,7 @@ import com.evernote.thrift.TException;
 @Component(immediate = true)
 public class EvernoteImportServiceImpl implements ImporterService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	private static String EVERNOTE_NODE_REPO = "evernote";
+	private static String EVERNOTE_NODE_REPO = "evernote-sync";
 	private EvernoteAcc evernoteAccount;
 	
 	private SlingRepository repository;
@@ -96,13 +96,14 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	@Override
 	public void initiate() {
 		Session session = getSession();
-		Node repo = null;
+		Node evNode = null;
 		
 		try {
-			repo = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
+			evNode = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
 		} catch (javax.jcr.PathNotFoundException e2) {
 			try {
-				repo = session.getRootNode().addNode("content/dam/"+EVERNOTE_NODE_REPO);
+				evNode = session.getRootNode().addNode("content/dam/"+EVERNOTE_NODE_REPO);
+				evNode.setProperty("jcr:title", "Evernote Sync");
 			} catch (Exception e) {
 				e.printStackTrace();
 			} 
@@ -158,7 +159,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 					
 					//Check to see if the node should be created
 					try {		
-						noteNode = repo.getNode(guid);
+						noteNode = repo.getNode(guid + ".html");
 					} catch (PathNotFoundException e) {
 						noteNode = createNode(repo, guid);	
 					}
@@ -183,7 +184,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 		try {
 			Note note = evernoteAccount.getNotestore().getNote(guid, true, true, false, false);
 			
-			Node evNode = repo.addNode(guid, "dam:Asset");
+			Node evNode = repo.addNode(guid + ".html", "dam:Asset");
 			Node jcrContentNode = evNode.addNode("jcr:content", "dam:AssetContent");	
 			
 			//Creates and sets all the metadata pulled in from the note
@@ -261,7 +262,6 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	 */
 	private Node setMetadataProperties(EvernoteAcc evAcc, Note note, Node n) {
 		try {
-			n.setProperty("dam:MIMEtype", "text/html");
 			n.setProperty("dc:format", "text/html");
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");

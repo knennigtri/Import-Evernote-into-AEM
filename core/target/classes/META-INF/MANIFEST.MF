@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1432284678621
+Bnd-LastModified: 1432498216895
 Build-Jdk: 1.7.0_71
 Built-By: nennig
 Bundle-ClassPath: .,OSGI-INF/lib/evernote-api-1.25.1.jar
