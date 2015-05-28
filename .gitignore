@@ -1,7 +1,12 @@
 *.vlt
 *.DS_Store
-core/**/*.class
-core/**/*.jar
-*.zip
-core/**/*.lst
+core/target/*
+ui.apps/target/*
+ui.content/target/*
 *.brackets.json
+*.MF
+
+
+*.jar
+
+*.zip
