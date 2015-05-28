@@ -4,7 +4,7 @@
         <service servicefactory="false">
             <provide interface="java.lang.Runnable"/>
         </service>
-        <property name="scheduler.expression" value="*/10 * * * * ?"/>
+        <property name="scheduler.period" value="10"/>
         <property name="scheduler.concurrent" type="Boolean" value="false"/>
         <property name="evernote.username"/>
         <property name="evernote.password"/>

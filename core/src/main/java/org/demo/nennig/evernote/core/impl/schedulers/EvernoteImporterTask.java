@@ -45,8 +45,7 @@ import org.slf4j.LoggerFactory;
 @Component(immediate = true, metatype = true, label = "Evernote Configuration", description = "Basic import task for Evernote")
 @Service(value = Runnable.class)
 @Properties({
-    @Property(name = "scheduler.expression", value = "*/10 * * * * ?", //every 5 seconds
-        description = "Cron-job expression"),
+	@Property(name="scheduler.period", value="10"), //Run every 10 seconds
     @Property(name = "scheduler.concurrent", boolValue=false,
         description = "Whether or not to schedule this task concurrently")
 })

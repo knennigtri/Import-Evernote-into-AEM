@@ -4,7 +4,7 @@
     <jcr:content
         cq:allowedTemplates="/apps/evernote/templates/page"
         cq:designPath="/etc/designs/evernote"
-        cq:lastModified="{Date}2015-05-24T12:00:30.617-07:00"
+        cq:lastModified="{Date}2015-05-26T11:43:28.710-07:00"
         cq:lastModifiedBy="admin"
         cq:template="/apps/evernote/templates/homepage"
         jcr:lastModified="{Date}2014-05-27T10:22:52.400+02:00"
@@ -43,7 +43,9 @@
                 jcr:lastModified="{Date}2015-03-19T02:39:44.668-06:00"
                 jcr:lastModifiedBy="admin"
                 jcr:primaryType="nt:unstructured"
-                sling:resourceType="evernote/components/content/evernote"/>
+                jcr:title="/content/dam/evernote-sync/0b060261-be57-4890-89b3-ad8c18dba7ed.html"
+                sling:resourceType="evernote/components/content/evernote"
+                fileReference="/content/dam/evernote-sync/0b060261-be57-4890-89b3-ad8c18dba7ed.html"/>
             <image_1
                 jcr:created="{Date}2014-05-26T17:52:39.201+02:00"
                 jcr:createdBy="admin"

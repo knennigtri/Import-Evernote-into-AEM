@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1432498216895
-Build-Jdk: 1.7.0_71
+Bnd-LastModified: 1432787727135
+Build-Jdk: 1.8.0_31
 Built-By: nennig
 Bundle-ClassPath: .,OSGI-INF/lib/evernote-api-1.25.1.jar
 Bundle-Description: Core bundle for Evernote Importer
@@ -29,26 +29,26 @@ Export-Package: com.evernote.auth;version="1.25.1",com.evernote.clients;
  .protocol;version="1.25.1";uses:="com.evernote.thrift,com.evernote.thri
  ft.transport",com.evernote.thrift.transport;version="1.25.1";uses:="com
  .evernote.thrift"
-Import-Package: com.evernote.auth;version="[1.25,2)",com.evernote.client
- s;version="[1.25,2)",com.evernote.edam.error;version="[1.25,2)",com.eve
- rnote.edam.notestore;version="[1.25,2)",com.evernote.edam.type;version=
- "[1.25,2)",com.evernote.thrift;version="[1.25,2)",javax.jcr;version="[2
- .0,3)",javax.servlet,org.apache.sling.api;version="[2.3,3)",org.apache.
- sling.api.request;version="[2.4,3)",org.apache.sling.commons.osgi;versi
- on="[2.2,3)",org.apache.sling.jcr.api;version="[2.2,3)",org.slf4j;versi
- on="[1.5,2)"
-Provide-Capability: osgi.service;effective:=active;objectClass="java.lan
- g.Runnable";scheduler.expression="*/10 * * * * ?";scheduler.concurrent=
- false;evernote.dev=false;service.vendor=Adobe,osgi.service;effective:=a
- ctive;objectClass="javax.servlet.Filter";service.ranking=-700;sling.fil
- ter.scope=REQUEST;service.vendor=Adobe,osgi.service;effective:=active;o
- bjectClass="org.demo.nennig.evernote.core.ImporterService";service.vend
- or=Adobe
+Import-Package: com.adobe.cq.sightly;version="[2.2,3)",com.evernote.auth
+ ;version="[1.25,2)",com.evernote.clients;version="[1.25,2)",com.evernot
+ e.edam.error;version="[1.25,2)",com.evernote.edam.notestore;version="[1
+ .25,2)",com.evernote.edam.type;version="[1.25,2)",com.evernote.thrift;v
+ ersion="[1.25,2)",javax.jcr;version="[2.0,3)",javax.servlet,org.apache.
+ sling.api;version="[2.3,3)",org.apache.sling.api.request;version="[2.4,
+ 3)",org.apache.sling.api.resource;version="[2.5,3)",org.apache.sling.co
+ mmons.osgi;version="[2.2,3)",org.apache.sling.jcr.api;version="[2.2,3)"
+ ,org.slf4j;version="[1.5,2)"
+Provide-Capability: osgi.service;effective:=active;objectClass="org.demo
+ .nennig.evernote.core.ImporterService";service.vendor=Adobe,osgi.servic
+ e;effective:=active;objectClass="javax.servlet.Filter";service.ranking=
+ -700;sling.filter.scope=REQUEST;service.vendor=Adobe,osgi.service;effec
+ tive:=active;objectClass="java.lang.Runnable";scheduler.period=10;sched
+ uler.concurrent=false;evernote.dev=false;service.vendor=Adobe
 Require-Capability: osgi.service;effective:=active;filter:="(objectClass
  =org.apache.sling.jcr.api.SlingRepository)",osgi.ee;filter:="(&(osgi.ee
  =JavaSE)(version=1.7))"
-Service-Component: OSGI-INF/org.demo.nennig.evernote.core.impl.scheduler
- s.EvernoteImporterTask.xml,OSGI-INF/org.demo.nennig.evernote.core.impl.
- EvernoteImportServiceImpl.xml,OSGI-INF/org.demo.nennig.evernote.core.im
- pl.filters.LoggingFilter.xml
+Service-Component: OSGI-INF/org.demo.nennig.evernote.core.impl.filters.L
+ oggingFilter.xml,OSGI-INF/org.demo.nennig.evernote.core.impl.EvernoteIm
+ portServiceImpl.xml,OSGI-INF/org.demo.nennig.evernote.core.impl.schedul
+ ers.EvernoteImporterTask.xml
 Tool: Bnd-2.3.0.201405100607

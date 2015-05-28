@@ -1,2 +1,7 @@
-.vlt
-.DS_Store
+*.vlt
+*.DS_Store
+core/**/*.class
+core/**/*.jar
+*.zip
+core/**/*.lst
+*.brackets.json
