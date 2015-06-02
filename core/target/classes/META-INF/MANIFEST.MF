@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1432788747383
+Bnd-LastModified: 1433222348814
 Build-Jdk: 1.7.0_71
 Built-By: nennig
 Bundle-ClassPath: .,OSGI-INF/lib/evernote-api-1.25.1.jar
@@ -29,15 +29,14 @@ Export-Package: com.evernote.auth;version="1.25.1",com.evernote.clients;
  .protocol;version="1.25.1";uses:="com.evernote.thrift,com.evernote.thri
  ft.transport",com.evernote.thrift.transport;version="1.25.1";uses:="com
  .evernote.thrift"
-Import-Package: com.adobe.cq.sightly;version="[2.2,3)",com.evernote.auth
- ;version="[1.25,2)",com.evernote.clients;version="[1.25,2)",com.evernot
- e.edam.error;version="[1.25,2)",com.evernote.edam.notestore;version="[1
- .25,2)",com.evernote.edam.type;version="[1.25,2)",com.evernote.thrift;v
- ersion="[1.25,2)",javax.jcr;version="[2.0,3)",javax.servlet,org.apache.
- sling.api;version="[2.3,3)",org.apache.sling.api.request;version="[2.4,
- 3)",org.apache.sling.api.resource;version="[2.5,3)",org.apache.sling.co
- mmons.osgi;version="[2.2,3)",org.apache.sling.jcr.api;version="[2.2,3)"
- ,org.slf4j;version="[1.5,2)"
+Import-Package: com.evernote.auth;version="[1.25,2)",com.evernote.client
+ s;version="[1.25,2)",com.evernote.edam.error;version="[1.25,2)",com.eve
+ rnote.edam.notestore;version="[1.25,2)",com.evernote.edam.type;version=
+ "[1.25,2)",com.evernote.thrift;version="[1.25,2)",javax.jcr;version="[2
+ .0,3)",javax.servlet,org.apache.sling.api;version="[2.3,3)",org.apache.
+ sling.api.request;version="[2.4,3)",org.apache.sling.commons.osgi;versi
+ on="[2.2,3)",org.apache.sling.jcr.api;version="[2.2,3)",org.slf4j;versi
+ on="[1.5,2)"
 Provide-Capability: osgi.service;effective:=active;objectClass="javax.se
  rvlet.Filter";service.ranking=-700;sling.filter.scope=REQUEST;service.v
  endor=Adobe,osgi.service;effective:=active;objectClass="org.demo.nennig

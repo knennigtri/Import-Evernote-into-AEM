@@ -1,7 +1,7 @@
 org/demo/nennig/evernote/core/impl/schedulers/EvernoteImporterTask.class
-apps/evernote/components/content/evernote/Evernote.class
 org/demo/nennig/evernote/core/impl/filters/LoggingFilter.class
 org/demo/nennig/evernote/core/impl/EvernoteImportServiceImpl.class
+org/demo/nennig/evernote/core/EvernoteAsset.class
 org/demo/nennig/evernote/core/package-info.class
 org/demo/nennig/evernote/core/EvernoteAcc.class
 org/demo/nennig/evernote/core/ImporterService.class

@@ -1,2 +1,6 @@
-<h2 data-sly-use.ev="org.demo.nennig.evernote.core.apps.evernote.components.content.evernote.Evernote">....${ev.node @ context="html"}
-</h2>
+<h1>---------------------------------------</h1>
+<div  data-sly-use.ev="Evernote"
+		class="${ev.cssClass || ''}">
+		<p>${ev.html @ context='unsafe'}</p>
+</div>
+<h1>---------------------------------------</h1>

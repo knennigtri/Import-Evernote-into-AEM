@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-    jcr:description="Generic template for Evernote Importer Example Page"
+    jcr:description="Page for viewing evernote components"
     jcr:primaryType="cq:Template"
-    jcr:title="Evernote Importer Example Page"
+    jcr:title="Evernote Page"
     allowedPaths="/content/evernote(/.*)?"
     ranking="{Long}90">
     <jcr:content
-        cq:allowedTemplates="/apps/evernote/templates/page"
         cq:designPath="/etc/designs/evernote"
-        cq:template="/apps/evernote/templates/homepage"
         jcr:primaryType="cq:PageContent"
         sling:resourceType="evernote/components/page/page-home">
         <par
