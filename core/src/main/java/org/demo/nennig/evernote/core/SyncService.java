@@ -9,13 +9,13 @@ import javax.jcr.RepositoryException;
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
-public interface ImporterService {
+public interface SyncService {
 
 	public void initiate() throws RepositoryException;
 
 	public void updateAll() throws RepositoryException;
 	
-	public void importNotes(String words) throws RepositoryException;
+	public void syncNotes(String words) throws RepositoryException;
 	
 	public boolean deleteNode(Node node);
 	

@@ -28,29 +28,29 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.demo.nennig.evernote.core.EvernoteAcc;
-import org.demo.nennig.evernote.core.impl.EvernoteImportServiceImpl;
+import org.demo.nennig.evernote.core.impl.EvernoteSyncServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Cron-job like task that gets executed regularly.
  * 
- * <p>Imports Evernote notes on a regular basis. Currently this class is written to only
- * import notes that are from the Evernote Web Clipper tool. This can easily be extended
+ * <p>Sync of Evernote notes into AEM on a regular basis. Currently this class is written to only
+ * sync notes that are from the Evernote Web Clipper tool. This can easily be extended
  * to allow for any types of notes to be added.
  * 
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
 //TODO Create an initial sync option. Boolean for inital sync. String for initial query with words
-@Component(immediate = true, metatype = true, label = "Evernote Configuration", description = "Basic import task for Evernote")
+@Component(immediate = true, metatype = true, label = "Evernote Configuration", description = "Basic sync task for Evernote")
 @Service(value = Runnable.class)
 @Properties({
-	@Property(name="scheduler.period", value="10"), //Run every 10 seconds
+	@Property(name="scheduler.period", value="* * * * * ?"), //Run every 10 seconds
     @Property(name = "scheduler.concurrent", boolValue=false,
         description = "Whether or not to schedule this task concurrently")
 })
-public class EvernoteImporterTask implements Runnable {
+public class EvernoteSyncTask implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Reference
@@ -65,7 +65,7 @@ public class EvernoteImporterTask implements Runnable {
     }
     
 	/**
-	 * Method that runs regularly to import any new Evernote notes that 
+	 * Method that runs regularly to sync any new Evernote notes that 
 	 * should be added into the JCR
 	 */
     @Override
@@ -74,17 +74,23 @@ public class EvernoteImporterTask implements Runnable {
         logger.debug("Running Evernote Sync Task...");
         try {
         	if(isDevMode){
-        		eAccount = new EvernoteAcc(token);
+        		if(!token.isEmpty()){
+        			eAccount = new EvernoteAcc(token);
+        		}
         	}
         	else
         	{
-        		eAccount = new EvernoteAcc(username, password);
+        		if(!username.isEmpty() && !password.isEmpty()){
+        			eAccount = new EvernoteAcc(username, password);
+        		}
         	}
         	
-        	EvernoteImportServiceImpl eSyncServiceImpl = new EvernoteImportServiceImpl(repository, eAccount);
-        	
-        	//TODO Add import words to config file
-        	eSyncServiceImpl.importWebClipperNotes("updated:day");
+        	if(eAccount != null){
+	        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(repository, eAccount);
+	        	
+	        	//TODO Add import words to config file
+	        	eSyncServiceImpl.syncWebClipperNotes("updated:day");
+        	}
 		} catch (RepositoryException e) {
 			logger.error(e.toString());
 			e.printStackTrace();

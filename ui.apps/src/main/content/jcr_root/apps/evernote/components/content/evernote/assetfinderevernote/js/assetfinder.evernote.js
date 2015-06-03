@@ -27,22 +27,6 @@
         imageServlet = '/bin/wcm/contentfinder/asset/view.html',
         itemResourceType = 'cq/gui/components/authoring/assetfinder/asset';
 
-    /**
-     * simple "template" function to render an image in the assetfinder
-     * @param  {String} src URL to the image
-     * @return {String} markup for the image
-     */
-    function imageTemplate(src) {
-        return '<article class="card-asset cq-draggable" draggable="true"  data-path="'+ src +'" data-asset-group="reference" data-type="'+ name +'" data-asset-mimetype="text/html">' +
-            '<i class="select"></i>' +
-            '<i class="move"></i>' +
-            '<div class="card">' +
-                '<span class="image">' +
-                    '<img class="show-grid cq-dd-image" src="'+ src +'" alt="cover">' +
-                '</span>' +
-            '</div>' +
-        '</article>';
-    }
     
     /**
      *
@@ -57,7 +41,7 @@
         var param = {
                 '_dc': new Date().getTime(),  // cache killer
                 'query': query,
-                'mimeType': 'text/html',
+                'mimeType': 'text/html,text,application/xhtml+xml',
                 'itemResourceType': itemResourceType, // single item rendering (cards)
                 'limit': lowerLimit + ".." + upperLimit,
                 '_charset_': 'utf-8'

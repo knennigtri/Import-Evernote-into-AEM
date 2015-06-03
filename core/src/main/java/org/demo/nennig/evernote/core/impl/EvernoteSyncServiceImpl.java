@@ -9,7 +9,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.demo.nennig.evernote.core.EvernoteAcc;
-import org.demo.nennig.evernote.core.ImporterService;
+import org.demo.nennig.evernote.core.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,14 +21,17 @@ import com.evernote.edam.type.Note;
 import com.evernote.thrift.TException;
 
 /**
- * Implements the {@link ImporterService} for Evernote.
+ * This class allows for Evernote notes to be synced to AEM. The Asset node structure is created as
+ * well as methods to import/update/delete the Evernote Asset nodes. Currently only initial import
+ * is supported. Updates of nodes will come in later updates.
+ * Implements the {@link SyncService} for Evernote.
  * 
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
-@Service(value = ImporterService.class)
+@Service(value = SyncService.class)
 @Component(immediate = true)
-public class EvernoteImportServiceImpl implements ImporterService {
+public class EvernoteSyncServiceImpl implements SyncService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static String EVERNOTE_NODE_REPO = "evernote-sync";
 	private EvernoteAcc evernoteAccount;
@@ -39,7 +42,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	 * Default constructor. Null values will be given and a {@link RepositoryException} will occur
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public EvernoteImportServiceImpl() throws RepositoryException{
+	public EvernoteSyncServiceImpl() throws RepositoryException{
 		this(null,null);
 	};
 
@@ -49,7 +52,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	 * @param evAcc The Evernote account that will supply the notes
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public EvernoteImportServiceImpl(SlingRepository repo, EvernoteAcc evAcc) throws RepositoryException{
+	public EvernoteSyncServiceImpl(SlingRepository repo, EvernoteAcc evAcc) throws RepositoryException{
 		repository = repo;
 		evernoteAccount = evAcc;
 		this.initiate();
@@ -86,32 +89,33 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	}
 	
 	/**
-	 * Initiates the importer process. If there isn't an Evernote node in the dam,
+	 * Initiates the sync process. If there isn't an Evernote node in the dam,
 	 * then this will create it.
 	 */
 	@Override
 	public void initiate() {
 		Session session = getSession();
 		Node evNode = null;
-		
-		try {
-			evNode = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
-		} catch (javax.jcr.PathNotFoundException e2) {
+		if(session != null){
 			try {
-				evNode = session.getRootNode().addNode("content/dam/"+EVERNOTE_NODE_REPO);
-				evNode.setProperty("jcr:title", "Evernote Sync");
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
-		} catch (RepositoryException e2) {
-			e2.printStackTrace();
-		} finally{
-			closeSession(session);
+				evNode = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
+			} catch (javax.jcr.PathNotFoundException e2) {
+				try {
+					evNode = session.getRootNode().addNode("content/dam/"+EVERNOTE_NODE_REPO);
+					evNode.setProperty("jcr:title", "Evernote Sync");
+				} catch (Exception e) {
+					e.printStackTrace();
+				} 
+			} catch (RepositoryException e2) {
+				e2.printStackTrace();
+			} finally{
+				closeSession(session);
+			}
 		}
 	}
 	
 	/**
-	 * This method looks at the imported Evernote notes and updates them based on the linked Evernote account
+	 * This method looks at the synced Evernote notes and updates them based on the linked Evernote account
 	 * TODO Implement the updateAll() method
 	 */
 	@Override
@@ -120,26 +124,26 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	}
 
 	/**
-	 * This method imports only notes that have been added to Evernote based on the Web Clipper add on.
+	 * This method syncs only notes that have been added to Evernote based on the Web Clipper add on.
 	 * The Evernote grammar can be found from the link below.
 	 * @see <a href="https://dev.evernote.com/doc/articles/search_grammar.php">Evernote Grammar</a>
 	 * @param words String for Evernote search terms. Example: updated:day
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public void importWebClipperNotes(String words) throws RepositoryException{
-		importNotes(words + " source:web.clip");
-		importNotes(words + " source:Clearly");
+	public void syncWebClipperNotes(String words) throws RepositoryException{
+		syncNotes(words + " source:web.clip");
+		syncNotes(words + " source:Clearly");
 	}
 	
 	/**
-	 * This method imports notes that have been added to Evernote based upon the given search term
+	 * This method syncs notes that have been added to Evernote based upon the given search term
 	 * The Evernote grammar can be found from the link below.
 	 * @see <a href="https://dev.evernote.com/doc/articles/search_grammar.php">Evernote Grammar</a>
 	 * @param words String for Evernote search terms. Example: updated:day
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
 	@Override
-	public void importNotes(String words) throws RepositoryException{
+	public void syncNotes(String words) throws RepositoryException{
 			logger.debug("Checking for new notes with words: '" + words + "'");
 			
 			Session session = getSession();
@@ -178,7 +182,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	//TODO Create case for evernote assets that have extra content such as images
 	@Override
 	public Node createNode(String newNodeName, Node repo, String guid) {
-		logger.debug("importing Note:: '" + newNodeName + "'");
+		logger.debug("syncing Note:: '" + newNodeName + "'");
 		try {
 			Note note = evernoteAccount.getNotestore().getNote(guid, true, true, false, false);
 			
@@ -193,7 +197,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 			
 			Node originalNode = renditionsNode.addNode("original", "nt:file");
 			
-			//Creates and sets all the properties for the note resource being imported 
+			//Creates and sets all the properties for the note resource being synced 
 			Node originalJCRContentNode = originalNode.addNode("jcr:content", "nt:resource");
 			setOrginalJCRContentProperties(note, originalJCRContentNode);
 			
