@@ -1,6 +1,5 @@
 package org.demo.nennig.evernote.core.impl;
 
-import javax.jcr.LoginException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -63,13 +62,10 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	private Session getSession(){
 		Session session = null;
 		try {
-			//FIXME Find a better way to get the session
-			session = this.repository.loginAdministrative(null);
-		} catch (LoginException e2) {
+			session = repository.loginService(null, null);
+		} catch (Exception e2) {
 			e2.printStackTrace();
-		} catch (RepositoryException e2) {
-			e2.printStackTrace();
-		}
+		} 
 		
 		return session;
 	}
@@ -144,7 +140,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	 */
 	@Override
 	public void importNotes(String words) throws RepositoryException{
-			logger.info("Sync with recent words: '" + words + "'");
+			logger.debug("Checking for new notes with words: '" + words + "'");
 			
 			Session session = getSession();
 			Node repo = null;
@@ -153,15 +149,15 @@ public class EvernoteImportServiceImpl implements ImporterService {
 			NoteList nl = evernoteAccount.getRequestedNotes(words);
 			if(nl != null){
 				for (Note note : nl.getNotes()) {
-					logger.info("Current Note: " + note.getTitle());
 					String guid = note.getGuid();
 					Node noteNode = null;
+					String nodeName = guid;
 					
 					//Check to see if the node should be created
 					try {		
-						noteNode = repo.getNode(guid + ".html");
+						noteNode = repo.getNode(nodeName);
 					} catch (PathNotFoundException e) {
-						noteNode = createNode(repo, guid);	
+						noteNode = createNode(nodeName, repo, guid);	
 					}
 					
 					//TODO Check to see if the node should be updated
@@ -179,12 +175,14 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	 * @param guid The guid of the Evernote note
 	 * @return The created Evernote node
 	 */
+	//TODO Create case for evernote assets that have extra content such as images
 	@Override
-	public Node createNode(Node repo, String guid) {
+	public Node createNode(String newNodeName, Node repo, String guid) {
+		logger.debug("importing Note:: '" + newNodeName + "'");
 		try {
 			Note note = evernoteAccount.getNotestore().getNote(guid, true, true, false, false);
 			
-			Node evNode = repo.addNode(guid + ".html", "dam:Asset");
+			Node evNode = repo.addNode(newNodeName, "dam:Asset");
 			Node jcrContentNode = evNode.addNode("jcr:content", "dam:AssetContent");	
 			
 			//Creates and sets all the metadata pulled in from the note
@@ -226,7 +224,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	 */
 	@Override
 	public boolean updateNode(Node n, String guid) {
-		//TODO Re-read and rewrite this method... if it's needed
+		//TODO updateNode() Re-read and rewrite this method... if it's needed
 		logger.debug("Updating Node: " + guid);
 		
 		Note note;
@@ -245,7 +243,8 @@ public class EvernoteImportServiceImpl implements ImporterService {
 	}
 	
 	private static String notebookNameProperty = "notebook.name";
-	private static String notebookGuidProperty = "notebook.Guid";
+	private static String notebookGuidProperty = "notebook.guid";
+	private static String noteGuidProperty = "note.guid";
 	private static String noteNameProperty = "note.title";
 	private static String noteUpdatedProperty = "note.updated";
 	private static String noteAuthorProperty = "note.author";
@@ -270,6 +269,7 @@ public class EvernoteImportServiceImpl implements ImporterService {
 			
 			n.setProperty(notebookGuidProperty, note.getNotebookGuid());
 			n.setProperty(notebookNameProperty, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
+			n.setProperty(noteGuidProperty, note.getGuid());
 			n.setProperty(noteNameProperty, note.getTitle());
 			n.setProperty(noteAuthorProperty, note.getAttributes().getAuthor());
 			n.setProperty(noteUpdatedProperty, note.getUpdated());

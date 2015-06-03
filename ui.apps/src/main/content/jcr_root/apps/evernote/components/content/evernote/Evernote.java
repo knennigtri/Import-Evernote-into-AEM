@@ -6,6 +6,7 @@ import org.apache.sling.api.resource.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.Asset;
+import com.day.cq.wcm.api.AuthoringUIMode;
 
 import java.io.InputStream;
 import java.io.BufferedReader;
@@ -18,13 +19,10 @@ public class Evernote extends WCMUse {
 	String file;
 	StringBuilder htmloutput;
 	Asset asset;
-	String evClassName;
+	String dropTargetsClassName, placeholderClassName;
 	
 	@Override
     public void activate() throws Exception {
-		//TODO Fix the CQ Droptargets....
-		evClassName = DropTarget.CSS_CLASS_PREFIX + "file";
-	
 		file = getProperties().get("fileReference", String.class);
 		if(file != null){
 			logger.error("FileReference: " + file);
@@ -41,15 +39,26 @@ public class Evernote extends WCMUse {
 	            htmloutput.append(line);
 	        }
 		}
+		
+		dropTargetsClassName = DropTarget.CSS_CLASS_PREFIX + "file";
+		
+		if(htmloutput == null){
+			//Set placeholder class for touch
+			if(AuthoringUIMode.TOUCH.equals(AuthoringUIMode.fromRequest(getRequest()))){
+				placeholderClassName = "cq-placeholder";
+			} else { //Set placeholder class for classic
+				placeholderClassName = "cq-image-placeholder";
+			}
+		}
     }
 	
 	public String getCssClass(){
-		return evClassName;
+		return dropTargetsClassName + " " + placeholderClassName;
 	}
 	
 	public String getHtml(){
 		if(htmloutput == null){
-			return "Drag your Evernote Asset here";
+			return "";
 		}
 		return htmloutput.toString();
 	}

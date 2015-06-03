@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
+//TODO Create an initial sync option. Boolean for inital sync. String for initial query with words
 @Component(immediate = true, metatype = true, label = "Evernote Configuration", description = "Basic import task for Evernote")
 @Service(value = Runnable.class)
 @Properties({
@@ -82,7 +83,7 @@ public class EvernoteImporterTask implements Runnable {
         	
         	EvernoteImportServiceImpl eSyncServiceImpl = new EvernoteImportServiceImpl(repository, eAccount);
         	
-        	//TODO Decide if we want to add words to the config file
+        	//TODO Add import words to config file
         	eSyncServiceImpl.importWebClipperNotes("updated:day");
 		} catch (RepositoryException e) {
 			logger.error(e.toString());
