@@ -1,6 +1,6 @@
 /Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/impl/filters/LoggingFilter.java
-/Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/impl/schedulers/EvernoteImporterTask.java
+/Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/impl/schedulers/EvernoteSyncTask.java
 /Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/package-info.java
 /Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/EvernoteAcc.java
-/Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/ImporterService.java
-/Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/impl/EvernoteImportServiceImpl.java
+/Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/impl/EvernoteSyncServiceImpl.java
+/Users/nennig/Documents/My AEM sandbox/workspace-luna/evernote/core/src/main/java/org/demo/nennig/evernote/core/SyncService.java
