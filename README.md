@@ -2,11 +2,24 @@
 
 Evernote: [https://evernote.com/](https://evernote.com/)
 
-This is a proof of concept project. I wanted to be able to show how easily you can create custom importers or sync tools into the JCR. This project has a interface called ImporterService that can be used to create other third party integrations to import data. Currently only the import works. I'll be be building a Evernote viewer component at a later date.
+This is a proof of concept project. I wanted to be able to show how easily you can create custom importers or sync tools into the JCR. This project has a interface called ImporterService that can be used to create other third party integrations to import data.
 
 Any Evernote notes made with the [Evernote Web Clipper](https://evernote.com/webclipper/) within the last day will automatically be imported into /dam/evernote/<guid of the note> as an asset.
 
 You need to use a production Evernote dev token in order to access the Evernote account that's connected to the Web Clipper.
+
+## How to use
+1. [Install this project via maven](How to build)
+2. Setup a [production Evernote dev token](https://dev.evernote.com/doc/articles/dev_tokens.php)
+3. In system/console/configMgr setup the configuration called "Evernote Configuration"
+   * Check developer mode
+   * Add your dev token
+4. Add some notes to your Evernote via webclipper
+5. Observe the notes being imported into AEM [content/dam/evernote-sync](http://localhost:4502/assets.html/content/dam/evernote-sync)
+6. Open [content/evernote/en.html](http://localhost:4502/editor.html/content/evernote/en.html)
+   * Add the Evernote component to the page
+   * In the assetfinder change the group to "Evernote Notes"
+   * Drag and drop an Evernote Asset onto the page
 
 ## Modules
 
