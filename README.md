@@ -10,6 +10,7 @@ You need to use a production Evernote dev token in order to access the Evernote 
 
 ## How to use
 1. [Install this project via maven](README.md#how-to-build)
+   * A basic content package will be added later
 2. Setup a [production Evernote dev token](https://dev.evernote.com/doc/articles/dev_tokens.php)
 3. In system/console/configMgr setup the configuration called "Evernote Configuration"
    * Check developer mode
