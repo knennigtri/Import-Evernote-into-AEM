@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1433359360734
+Bnd-LastModified: 1433367009738
 Build-Jdk: 1.7.0_71
 Built-By: nennig
 Bundle-ClassPath: .,OSGI-INF/lib/evernote-api-1.25.1.jar
@@ -36,12 +36,13 @@ Import-Package: com.evernote.auth;version="[1.25,2)",com.evernote.client
  .0,3)",javax.servlet,org.apache.sling.api;version="[2.3,3)",org.apache.
  sling.commons.osgi;version="[2.2,3)",org.apache.sling.jcr.api;version="
  [2.2,3)",org.slf4j;version="[1.5,2)"
-Provide-Capability: osgi.service;effective:=active;objectClass="javax.se
- rvlet.Filter";service.ranking=-700;sling.filter.scope=REQUEST;service.v
- endor=Adobe,osgi.service;effective:=active;objectClass="java.lang.Runna
- ble";scheduler.period="* * * * * ?";scheduler.concurrent=false;evernote
- .dev=false;service.vendor=Adobe,osgi.service;effective:=active;objectCl
- ass="org.demo.nennig.evernote.core.SyncService";service.vendor=Adobe
+Provide-Capability: osgi.service;effective:=active;objectClass="java.lan
+ g.Runnable";scheduler.expression="*/10 * * * * ?";scheduler.concurrent=
+ false;evernote.dev=false;service.vendor=Adobe,osgi.service;effective:=a
+ ctive;objectClass="javax.servlet.Filter";service.ranking=-700;sling.fil
+ ter.scope=REQUEST;service.vendor=Adobe,osgi.service;effective:=active;o
+ bjectClass="org.demo.nennig.evernote.core.SyncService";service.vendor=A
+ dobe
 Require-Capability: osgi.service;effective:=active;filter:="(objectClass
  =org.apache.sling.jcr.api.SlingRepository)",osgi.ee;filter:="(&(osgi.ee
  =JavaSE)(version=1.7))"

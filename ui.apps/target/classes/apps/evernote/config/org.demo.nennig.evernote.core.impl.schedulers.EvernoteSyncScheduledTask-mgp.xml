@@ -5,5 +5,5 @@
     evernote.token=""
     password=""
     scheduler.concurrent="{Boolean}false"
-    scheduler.expression="* * * * * ?"
+    scheduler.expression="*/10 * * * * ?"
     username=""/>
