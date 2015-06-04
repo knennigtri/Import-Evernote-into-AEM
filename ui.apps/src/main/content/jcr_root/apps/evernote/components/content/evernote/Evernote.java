@@ -16,17 +16,20 @@ import java.io.InputStreamReader;
 
 public class Evernote extends WCMUse {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	String file;
-	StringBuilder htmloutput;
-	Asset asset;
-	String dropTargetsClassName, placeholderClassName;
+	private String fileReference;
+	private Asset asset;
+	
+	//Objects to return to the presentation layer
+	private StringBuilder htmloutput;
+	private String dropTargetsClassName, placeholderClassName;
+	private String title;
 	
 	@Override
     public void activate() throws Exception {
-		file = getProperties().get("fileReference", String.class);
-		if(file != null){
-			logger.error("FileReference: " + file);
-			Resource rs = getResourceResolver().getResource(file);
+		fileReference = getProperties().get("fileReference", String.class);
+		if(fileReference != null){
+			logger.error("FileReference: " + fileReference);
+			Resource rs = getResourceResolver().getResource(fileReference);
 		    Asset asset = rs.adaptTo(Asset.class); 
 		    Resource original = asset.getOriginal();
 		    InputStream stream = original.adaptTo(InputStream.class);
@@ -38,9 +41,9 @@ public class Evernote extends WCMUse {
 	        while ((line = reader.readLine()) != null) {
 	            htmloutput.append(line);
 	        }
+	        title = asset.getMetadata("note.title").toString(); 
 		}
-		
-		dropTargetsClassName = DropTarget.CSS_CLASS_PREFIX + "file";
+		dropTargetsClassName = DropTarget.CSS_CLASS_PREFIX + "fileReference";
 		
 		if(htmloutput == null){
 			//Set placeholder class for touch
@@ -54,6 +57,10 @@ public class Evernote extends WCMUse {
 	
 	public String getCssClass(){
 		return dropTargetsClassName + " " + placeholderClassName;
+	}
+	
+	public String getTitle(){
+		return title;
 	}
 	
 	public String getHtml(){

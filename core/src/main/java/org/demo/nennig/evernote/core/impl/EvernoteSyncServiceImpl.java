@@ -246,15 +246,15 @@ public class EvernoteSyncServiceImpl implements SyncService {
 		return false;
 	}
 	
-	private static String notebookNameProperty = "notebook.name";
-	private static String notebookGuidProperty = "notebook.guid";
-	private static String noteGuidProperty = "note.guid";
-	private static String noteNameProperty = "note.title";
-	private static String noteUpdatedProperty = "note.updated";
-	private static String noteAuthorProperty = "note.author";
-	private static String noteSourceAppProperty = "note.sourceapp";
-	private static String noteSourceProperty = "note.source";
-	private static String noteSourceURLProperty = "note.sourceurl";
+	public static String NOTEBOOK_NAME_PROP = "notebook.name";
+	public static String NOTBOOK_GUID_PROP = "notebook.guid";
+	public static String NOTE_GUI_PROP = "note.guid";
+	public static String NOTE_NAME_PROP = "note.title";
+	public static String NOTE_UPDATED_PROP = "note.updated";
+	public static String NOTE_AUTHOR_PROP = "note.author";
+	public static String NOTE_SOURCEAPP_PROP = "note.sourceapp";
+	public static String NOTE_SOURCE_PROP = "note.source";
+	public static String NOTE_SOURCEURL_PROP = "note.sourceurl";
 	
 	/**
 	 * Takes a node and sets it's properties for the Evernote note metadata 
@@ -271,15 +271,15 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			
 			//FIXME setTags() on the properties from EvernoteAcc Object
 			
-			n.setProperty(notebookGuidProperty, note.getNotebookGuid());
-			n.setProperty(notebookNameProperty, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
-			n.setProperty(noteGuidProperty, note.getGuid());
-			n.setProperty(noteNameProperty, note.getTitle());
-			n.setProperty(noteAuthorProperty, note.getAttributes().getAuthor());
-			n.setProperty(noteUpdatedProperty, note.getUpdated());
-			n.setProperty(noteSourceAppProperty, note.getAttributes().getSourceApplication());
-			n.setProperty(noteSourceProperty, note.getAttributes().getSource());
-			n.setProperty(noteSourceURLProperty, note.getAttributes().getSourceURL());
+			n.setProperty(NOTBOOK_GUID_PROP, note.getNotebookGuid());
+			n.setProperty(NOTEBOOK_NAME_PROP, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
+			n.setProperty(NOTE_GUI_PROP, note.getGuid());
+			n.setProperty(NOTE_NAME_PROP, note.getTitle());
+			n.setProperty(NOTE_AUTHOR_PROP, note.getAttributes().getAuthor());
+			n.setProperty(NOTE_UPDATED_PROP, note.getUpdated());
+			n.setProperty(NOTE_SOURCEAPP_PROP, note.getAttributes().getSourceApplication());
+			n.setProperty(NOTE_SOURCE_PROP, note.getAttributes().getSource());
+			n.setProperty(NOTE_SOURCEURL_PROP, note.getAttributes().getSourceURL());
 			return n;
 		} catch (RepositoryException | EDAMUserException | EDAMSystemException | EDAMNotFoundException | TException e) {
 			e.printStackTrace();
