@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.io.BufferedReader;
 import java.lang.StringBuilder;
 import java.io.InputStreamReader;
+import org.demo.nennig.evernote.core.EvernoteAsset;
+//import org.demo.nennig.evernote.core.EvernoteAsset.Properites;
 
 
 public class Evernote extends WCMUse {
@@ -30,18 +32,23 @@ public class Evernote extends WCMUse {
 		if(fileReference != null){
 			logger.error("FileReference: " + fileReference);
 			Resource rs = getResourceResolver().getResource(fileReference);
-		    Asset asset = rs.adaptTo(Asset.class); 
-		    Resource original = asset.getOriginal();
-		    InputStream stream = original.adaptTo(InputStream.class);
-
-		    //Put the inputstream into a string to return
-		    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-	        htmloutput = new StringBuilder();
-	        String line;
-	        while ((line = reader.readLine()) != null) {
-	            htmloutput.append(line);
-	        }
-	        title = asset.getMetadata("note.title").toString(); 
+			
+			EvernoteAsset evAsset = new EvernoteAsset(rs);
+			htmloutput = evAsset.getContent();
+			title = evAsset.getMetadata(EvernoteAsset.NOTE_NAME).toString();
+			
+//		    Asset asset = rs.adaptTo(Asset.class); 
+//		    Resource original = asset.getOriginal();
+//		    InputStream stream = original.adaptTo(InputStream.class);
+//
+//		    //Put the inputstream into a string to return
+//		    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+//	        htmloutput = new StringBuilder();
+//	        String line;
+//	        while ((line = reader.readLine()) != null) {
+//	            htmloutput.append(line);
+//	        }
+//	        title = asset.getMetadata("note.title").toString(); 
 		}
 		dropTargetsClassName = DropTarget.CSS_CLASS_PREFIX + "fileReference";
 		

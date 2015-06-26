@@ -46,7 +46,8 @@ import org.slf4j.LoggerFactory;
 @Component(immediate = true, metatype = true, label = "Evernote Configuration", description = "Basic sync task for Evernote")
 @Service(value = Runnable.class)
 @Properties({
-	@Property(name="scheduler.expression", value="*/10 * * * * ?"), //Run every 10 seconds
+	// ***Dont change this value lower than 10 minutes since Evernote will throw an exception because the class is requesting too frequently.
+	@Property(name="scheduler.expression", value="*/10 * * * * ?"), //Run every 10 minutes.
     @Property(name = "scheduler.concurrent", boolValue=false,
         description = "Whether or not to schedule this task concurrently")
 })

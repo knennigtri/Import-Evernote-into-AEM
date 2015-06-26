@@ -41,7 +41,8 @@
 						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
 						<Embed-Directory>OSGI-INF/lib</Embed-Directory>
 						<_exportcontents>
-			                            com.evernote.*;version=${evernote.version}
+			                            com.evernote.*;version=${evernote.version},
+			                            org.demo.nennig.evernote.core.*
 						</_exportcontents>
 					</instructions>
                 </configuration>

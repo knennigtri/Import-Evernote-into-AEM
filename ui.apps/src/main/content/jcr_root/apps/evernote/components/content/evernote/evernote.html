@@ -1,5 +1,5 @@
-<div  data-sly-use.ev="Evernote"
-		class="${ev.cssClass || ''}"
+<h1 data-sly-use.ev="Evernote">${ev.title || ''}</h1>
+<div  class="${ev.cssClass || ''}"
 		title="${ev.title || ''}"
 		data-emptytext="Evernote Asset">
 		${ev.html @ context='unsafe'}</div>

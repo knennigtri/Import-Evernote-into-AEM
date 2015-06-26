@@ -9,6 +9,7 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.demo.nennig.evernote.core.EvernoteAcc;
+import org.demo.nennig.evernote.core.EvernoteAsset;
 import org.demo.nennig.evernote.core.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -246,15 +247,16 @@ public class EvernoteSyncServiceImpl implements SyncService {
 		return false;
 	}
 	
-	public static String NOTEBOOK_NAME_PROP = "notebook.name";
-	public static String NOTBOOK_GUID_PROP = "notebook.guid";
-	public static String NOTE_GUI_PROP = "note.guid";
-	public static String NOTE_NAME_PROP = "note.title";
-	public static String NOTE_UPDATED_PROP = "note.updated";
-	public static String NOTE_AUTHOR_PROP = "note.author";
-	public static String NOTE_SOURCEAPP_PROP = "note.sourceapp";
-	public static String NOTE_SOURCE_PROP = "note.source";
-	public static String NOTE_SOURCEURL_PROP = "note.sourceurl";
+
+	public static final String NOTEBOOK_NAME = "notebook.name";
+	public static final String NOTBOOK_GUID = "notebook.guid";
+	public static final String NOTE_GUID = "note.guid";
+	public static final String NOTE_NAME = "note.title";
+	public static final String NOTE_UPDATED = "note.updated";
+	public static final String NOTE_AUTHOR = "note.author";
+	public static final String NOTE_SOURCEAPP = "note.sourceapp";
+	public static final String NOTE_SOURCE = "note.source";
+	public static final String NOTE_SOURCEURL = "note.sourceurl";
 	
 	/**
 	 * Takes a node and sets it's properties for the Evernote note metadata 
@@ -270,16 +272,28 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");
 			
 			//FIXME setTags() on the properties from EvernoteAcc Object
+
 			
-			n.setProperty(NOTBOOK_GUID_PROP, note.getNotebookGuid());
-			n.setProperty(NOTEBOOK_NAME_PROP, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
-			n.setProperty(NOTE_GUI_PROP, note.getGuid());
-			n.setProperty(NOTE_NAME_PROP, note.getTitle());
-			n.setProperty(NOTE_AUTHOR_PROP, note.getAttributes().getAuthor());
-			n.setProperty(NOTE_UPDATED_PROP, note.getUpdated());
-			n.setProperty(NOTE_SOURCEAPP_PROP, note.getAttributes().getSourceApplication());
-			n.setProperty(NOTE_SOURCE_PROP, note.getAttributes().getSource());
-			n.setProperty(NOTE_SOURCEURL_PROP, note.getAttributes().getSourceURL());
+			n.setProperty(NOTEBOOK_NAME, note.getNotebookGuid());
+			n.setProperty(NOTEBOOK_NAME, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
+			n.setProperty(NOTE_GUID, note.getGuid());
+			n.setProperty(NOTE_NAME, note.getTitle());
+			n.setProperty(NOTE_AUTHOR, note.getAttributes().getAuthor());
+			n.setProperty(NOTE_UPDATED, note.getUpdated());
+			n.setProperty(NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
+			n.setProperty(NOTE_SOURCE, note.getAttributes().getSource());
+			n.setProperty(NOTE_SOURCEURL, note.getAttributes().getSourceURL());
+			
+			
+//			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, note.getNotebookGuid());
+//			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
+//			n.setProperty(EvernoteAsset.Properites.NOTE_GUID, note.getGuid());
+//			n.setProperty(EvernoteAsset.Properites.NOTE_NAME, note.getTitle());
+//			n.setProperty(EvernoteAsset.Properites.NOTE_AUTHOR, note.getAttributes().getAuthor());
+//			n.setProperty(EvernoteAsset.Properites.NOTE_UPDATED, note.getUpdated());
+//			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
+//			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCE, note.getAttributes().getSource());
+//			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
 			return n;
 		} catch (RepositoryException | EDAMUserException | EDAMSystemException | EDAMNotFoundException | TException e) {
 			e.printStackTrace();
