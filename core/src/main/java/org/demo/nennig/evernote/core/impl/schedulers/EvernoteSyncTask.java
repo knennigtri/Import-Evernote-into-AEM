@@ -25,6 +25,8 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.demo.nennig.evernote.core.EvernoteAcc;
@@ -54,16 +56,20 @@ import org.slf4j.LoggerFactory;
 public class EvernoteSyncTask implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    
     @Reference
-	private SlingRepository repository;
-
-    /**
-     * Binds the repository
-     * @param repository Binds the repository to this class
-     */
-	public void bindRepository(SlingRepository repository) {
-        this.repository = repository; 
-    }
+    private ResourceResolverFactory resolverFactory;
+    
+//	private SlingRepository repository;
+//
+//    /**
+//     * Binds the repository
+//     * @param repository Binds the repository to this class
+//     */
+//	public void bindRepository(SlingRepository repository) {
+//        this.repository = repository; 
+//    }
     
 	/**
 	 * Method that runs regularly to sync any new Evernote notes that 
@@ -89,11 +95,11 @@ public class EvernoteSyncTask implements Runnable {
         	}
         	
         	if(eAccount != null){
-        		if(repository != null){
-		        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(repository, eAccount);
+        		if(resolverFactory != null){
+		        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
 		        	
 		        	//TODO Add import words to config file
-		        	eSyncServiceImpl.syncWebClipperNotes("updated:day");
+//		        	eSyncServiceImpl.syncWebClipperNotes("updated:day");
         		}
         		else
         		{
@@ -106,8 +112,7 @@ public class EvernoteSyncTask implements Runnable {
         		logger.info("devToken: " + token);
         	}
 		} catch (Exception e) {
-			logger.warn("Cannot connect with Evernote. Check your credentials and internet connection.");
-			logger.error("error " + e);
+			logger.error("Evernote Sync Service Failed: " + e);
 		}
     }
     

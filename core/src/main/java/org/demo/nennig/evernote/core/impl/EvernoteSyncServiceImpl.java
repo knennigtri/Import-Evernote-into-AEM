@@ -1,5 +1,7 @@
 package org.demo.nennig.evernote.core.impl;
 
+import java.util.HashMap;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -7,6 +9,12 @@ import javax.jcr.Session;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
+import org.apache.sling.api.SlingException;
+import org.apache.sling.api.resource.LoginException;
+import org.apache.sling.api.resource.PersistenceException;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.demo.nennig.evernote.core.EvernoteAcc;
 import org.demo.nennig.evernote.core.EvernoteAsset;
@@ -39,13 +47,14 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	private static String EVERNOTE_NODE_REPO = "evernote-sync";
 	private EvernoteAcc evernoteAccount;
 	
-	private SlingRepository repository;
+	private ResourceResolverFactory resolverFactory;
+	
 	
 	/**
 	 * Default constructor. Null values will be given and a {@link RepositoryException} will occur
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public EvernoteSyncServiceImpl() throws RepositoryException{
+	public EvernoteSyncServiceImpl(){
 		this(null,null);
 	};
 
@@ -55,10 +64,25 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 * @param evAcc The Evernote account that will supply the notes
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public EvernoteSyncServiceImpl(SlingRepository repo, EvernoteAcc evAcc) throws RepositoryException{
-		repository = repo;
-		evernoteAccount = evAcc;
-		this.initiate();
+	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAcc evAcc){
+		ResourceResolver resourceResolver = null;
+		try {
+			resolverFactory = rrFactory;
+			evernoteAccount = evAcc;
+			
+			resourceResolver = rrFactory.getServiceResourceResolver(null);
+		
+			//Check to see if there is the Evernote Sync Folder
+			if(resourceResolver.getResource("/content/dam/"+EVERNOTE_NODE_REPO) == null){
+				this.initiate(resourceResolver);
+			}
+			
+			logger.info("User ID is: " + resourceResolver.getUserID());
+		} catch (LoginException e) {
+			logger.error("Error getting resourceResolver " + e);
+		}
+		
+		commitAndCloseResourceResolver(resourceResolver);
 	}
 
 	/**
@@ -66,14 +90,7 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 * @return The current Session
 	 */
 	private Session getSession(){
-		Session session = null;
-		try {
-			session = repository.loginService(null, null);
-//			session = repository.loginAdministrative(null);
-		} catch (Exception e2) {
-			e2.printStackTrace();
-		} 
-		
+		Session session = null; 
 		return session;
 	}
 	
@@ -92,31 +109,74 @@ public class EvernoteSyncServiceImpl implements SyncService {
 		}
 	}
 	
+	private ResourceResolver getResourceResolver(){
+		ResourceResolver resourceResolver = null;
+		try {
+			resourceResolver = resolverFactory.getServiceResourceResolver(null);
+		} catch (LoginException e) {
+			logger.error("Login failed: " + e);
+		}
+		return resourceResolver;
+	}
+	
+	private void commitAndCloseResourceResolver(ResourceResolver rr){
+		if(rr != null){
+			try {
+				rr.commit();
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			rr.close();
+		}
+	}
+	
+	
 	/**
 	 * Initiates the sync process. If there isn't an Evernote node in the dam,
 	 * then this will create it.
 	 */
 	@Override
-	public void initiate() {
-		Session session = getSession();
-		Node evNode = null;
-		if(session != null){
-			try {
-				evNode = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
-			} catch (javax.jcr.PathNotFoundException e2) {
-				try {
-					evNode = session.getRootNode().addNode("content/dam/"+EVERNOTE_NODE_REPO);
-					evNode.setProperty("jcr:title", "Evernote Sync");
-					logger.debug("Evernote Sync node added to the JCR");
-				} catch (Exception e) {
-					logger.error("error" + e);
-				} 
-			} catch (RepositoryException e2) {
-				e2.printStackTrace();
-			} finally{
-				closeSession(session);
-			}
+	public void initiate(ResourceResolver resourceResolver) {
+		Resource damFolderResource = null;
+		Resource evFolderResource = null;
+		damFolderResource = resourceResolver.getResource("/content/dam/");
+		
+		try {
+			HashMap<String, Object> hm = new HashMap<String,Object>();
+			hm.put("jcr:title", "Evernote Sync");
+			hm.put("jcr:primaryType", "sling:OrderedFolder");
+			
+			evFolderResource = resourceResolver.create(damFolderResource, EVERNOTE_NODE_REPO,hm);
+			logger.debug("Evernote Sync Folder added to the JCR");
+		} catch (PersistenceException e2) {
+			logger.error("Cannot create resource " + EVERNOTE_NODE_REPO + " " + e2);
 		}
+		logger.error("Resource Added: " + evFolderResource.getPath());
+		
+		
+//		Node evNode = null;
+//		if(session != null){
+//			try {
+//				evNode = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
+//			} catch (javax.jcr.PathNotFoundException e2) {
+//				try {
+//					evNode = session.getRootNode().addNode("content/dam/"+EVERNOTE_NODE_REPO);
+//					evNode.setProperty("jcr:title", "Evernote Sync");
+//					logger.debug("Evernote Sync node added to the JCR");
+//				} catch (Exception e) {
+//					logger.error("error" + e);
+//				} 
+//			} catch (RepositoryException e2) {
+//				e2.printStackTrace();
+//			} finally{
+//				closeSession(session);
+//			}
+//		}
+//		else
+//		{
+//			logger.error("Session is null.");
+//		}
 	}
 	
 	/**
@@ -124,7 +184,7 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 * TODO Implement the updateAll() method
 	 */
 	@Override
-	public void updateAll() throws RepositoryException{
+	public void updateAll() {
 //		syncRecent("");
 	}
 
@@ -151,7 +211,7 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	public void syncNotes(String words) throws RepositoryException{
 			logger.debug("Checking for new notes with words: '" + words + "'");
 			
-			Session session = getSession();
+			Session session = getSession(); 
 			Node evSyncNode = null;
 			evSyncNode = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
 			

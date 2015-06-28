@@ -3,6 +3,8 @@ package org.demo.nennig.evernote.core;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.sling.api.resource.ResourceResolver;
+
 /**
  * Interface for importing into the JCR from a 3rd part repo
  * 
@@ -11,9 +13,9 @@ import javax.jcr.RepositoryException;
  */
 public interface SyncService {
 
-	public void initiate() throws RepositoryException;
-
-	public void updateAll() throws RepositoryException;
+	void initiate(ResourceResolver resourceResolver);
+	
+	public void updateAll();
 	
 	public void syncNotes(String words) throws RepositoryException;
 	
@@ -22,5 +24,7 @@ public interface SyncService {
 	public boolean updateNode(Node n, String guid);
 
 	public Node createNode(String newNodeName, Node evSyncNode, String guid);
+
+
 	
 }
