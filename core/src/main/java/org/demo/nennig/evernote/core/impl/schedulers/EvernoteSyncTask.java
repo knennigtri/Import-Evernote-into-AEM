@@ -75,26 +75,39 @@ public class EvernoteSyncTask implements Runnable {
         logger.debug("Running Evernote Sync Task...");
         try {
         	if(isDevMode){
-        		if(!token.isEmpty()){
+        		if(token != null && !token.isEmpty()){
         			eAccount = new EvernoteAcc(token);
         		}
         	}
         	else
         	{
-        		if(!username.isEmpty() && !password.isEmpty()){
-        			eAccount = new EvernoteAcc(username, password);
+        		if(username != null && !username.isEmpty()){
+	        		if(password != null && !password.isEmpty()){
+	        			eAccount = new EvernoteAcc(username, password);
+	        		}
         		}
         	}
         	
-        	if((repository != null) &&(eAccount != null)){
-	        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(repository, eAccount);
-	        	
-	        	//TODO Add import words to config file
-	        	eSyncServiceImpl.syncWebClipperNotes("updated:day");
+        	if(eAccount != null){
+        		if(repository != null){
+		        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(repository, eAccount);
+		        	
+		        	//TODO Add import words to config file
+		        	eSyncServiceImpl.syncWebClipperNotes("updated:day");
+        		}
+        		else
+        		{
+        			logger.warn("Cannot connect to the repository");
+        		}
         	}
-		} catch (RepositoryException e) {
-			logger.error(e.toString());
-			e.printStackTrace();
+        	else {
+        		logger.warn("Evernote credentials not found. Suggest adding Oauth or a dev token to the configMgr.");
+        		logger.info("username: " + username);
+        		logger.info("devToken: " + token);
+        	}
+		} catch (Exception e) {
+			logger.warn("Cannot connect with Evernote. Check your credentials and internet connection.");
+			logger.error("error " + e);
 		}
     }
     
@@ -126,9 +139,6 @@ public class EvernoteSyncTask implements Runnable {
     @Activate
     protected void activate(final Map<String, Object> config) {
         configure(config);
-        logger.debug("username: " + username);
-        logger.debug("token: "+ token);
-        logger.debug("debug: " + isDevMode);
     }
 
     /**
@@ -136,9 +146,9 @@ public class EvernoteSyncTask implements Runnable {
      * @param config Map of config properties
      */
     private void configure(final Map<String, Object> config) {
-        this.username = PropertiesUtil.toString(config.get(EV_USERNAME), null);
-        this.password = PropertiesUtil.toString(config.get(EV_PASSWORD), null);
-        this.token = PropertiesUtil.toString(config.get(EV_TOKEN), null);
+        this.username = PropertiesUtil.toString(config.get(EV_USERNAME), "");
+        this.password = PropertiesUtil.toString(config.get(EV_PASSWORD), "");
+        this.token = PropertiesUtil.toString(config.get(EV_TOKEN), "");
         this.isDevMode = PropertiesUtil.toBoolean(config.get(EV_DEV), false);
 //      this.search = PropertiesUtil.toString(config.get(EV_WORDS), "updated:day");
     }

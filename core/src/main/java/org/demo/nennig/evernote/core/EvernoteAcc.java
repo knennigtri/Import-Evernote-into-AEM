@@ -3,6 +3,9 @@ package org.demo.nennig.evernote.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.evernote.auth.EvernoteAuth;
 import com.evernote.auth.EvernoteService;
 import com.evernote.clients.ClientFactory;
@@ -25,6 +28,7 @@ import com.evernote.edam.type.Tag;
  */
 public class EvernoteAcc {
 	private static final EvernoteService evService = EvernoteService.PRODUCTION;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	NoteStoreClient noteStore;
 	
@@ -38,8 +42,10 @@ public class EvernoteAcc {
 			EvernoteAuth evernoteAuth = new EvernoteAuth(evService, devToken);
 			ClientFactory factory = new ClientFactory(evernoteAuth);
 			noteStore = factory.createNoteStoreClient();
+			logger.debug("Connection to Evernote account established.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Cannot connect to the Evernote account. Consider checking your credentials and you internet connection");
+			logger.error("error " + e);
 		}
 	}
 

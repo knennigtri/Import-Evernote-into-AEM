@@ -13,10 +13,10 @@ import org.apache.sling.api.resource.Resource;
 
 import com.day.cq.dam.api.Asset;
 
-public class EvernoteAsset {
+public class EvernoteAsset{
 	private Asset asset;
 
-//	public static class Properites{
+	public static class Properites{
 		public static final String NOTEBOOK_NAME = "notebook.name";
 		public static final String NOTBOOK_GUID = "notebook.guid";
 		public static final String NOTE_GUID = "note.guid";
@@ -26,11 +26,12 @@ public class EvernoteAsset {
 		public static final String NOTE_SOURCEAPP = "note.sourceapp";
 		public static final String NOTE_SOURCE = "note.source";
 		public static final String NOTE_SOURCEURL = "note.sourceurl";
-//	}
+	}
 	
 	public EvernoteAsset(Resource resource){
 		asset  = resource.adaptTo(Asset.class);
 	}
+	
 	
 	public StringBuilder getContent(){
 		StringBuilder content;

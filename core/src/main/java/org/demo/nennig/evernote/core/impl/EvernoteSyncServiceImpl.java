@@ -14,6 +14,8 @@ import org.demo.nennig.evernote.core.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.adobe.granite.asset.api.Asset;
+import com.adobe.granite.asset.api.AssetManager;
 import com.evernote.edam.error.EDAMNotFoundException;
 import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
@@ -67,6 +69,7 @@ public class EvernoteSyncServiceImpl implements SyncService {
 		Session session = null;
 		try {
 			session = repository.loginService(null, null);
+//			session = repository.loginAdministrative(null);
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		} 
@@ -104,8 +107,9 @@ public class EvernoteSyncServiceImpl implements SyncService {
 				try {
 					evNode = session.getRootNode().addNode("content/dam/"+EVERNOTE_NODE_REPO);
 					evNode.setProperty("jcr:title", "Evernote Sync");
+					logger.debug("Evernote Sync node added to the JCR");
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("error" + e);
 				} 
 			} catch (RepositoryException e2) {
 				e2.printStackTrace();
@@ -148,21 +152,22 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			logger.debug("Checking for new notes with words: '" + words + "'");
 			
 			Session session = getSession();
-			Node repo = null;
-			repo = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
-		
+			Node evSyncNode = null;
+			evSyncNode = session.getNode("/content/dam/"+EVERNOTE_NODE_REPO);
+			
 			NoteList nl = evernoteAccount.getRequestedNotes(words);
 			if(nl != null){
 				for (Note note : nl.getNotes()) {
+//					logger.debug("Found new note: " + note.getTitle());
 					String guid = note.getGuid();
 					Node noteNode = null;
 					String nodeName = guid;
 					
 					//Check to see if the node should be created
 					try {		
-						noteNode = repo.getNode(nodeName);
+						noteNode = evSyncNode.getNode(nodeName);
 					} catch (PathNotFoundException e) {
-						noteNode = createNode(nodeName, repo, guid);	
+						noteNode = createNode(nodeName, evSyncNode, guid);	
 					}
 					
 					//TODO Check to see if the node should be updated
@@ -176,18 +181,19 @@ public class EvernoteSyncServiceImpl implements SyncService {
 
 	/**
 	 * This creates a node in the JCR for the Evernote note
-	 * @param repo JCR Repository for Evernote node to be created
+	 * @param evSyncFolder JCR Repository for Evernote node to be created
 	 * @param guid The guid of the Evernote note
 	 * @return The created Evernote node
 	 */
 	//TODO Create case for evernote assets that have extra content such as images
 	@Override
-	public Node createNode(String newNodeName, Node repo, String guid) {
+	public Node createNode(String newNodeName, Node evSyncFolder, String guid) {
 		logger.debug("syncing Note:: '" + newNodeName + "'");
 		try {
+			
 			Note note = evernoteAccount.getNotestore().getNote(guid, true, true, false, false);
 			
-			Node evNode = repo.addNode(newNodeName, "dam:Asset");
+			Node evNode = evSyncFolder.addNode(newNodeName, "dam:Asset");
 			Node jcrContentNode = evNode.addNode("jcr:content", "dam:AssetContent");	
 			
 			//Creates and sets all the metadata pulled in from the note
@@ -248,15 +254,15 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	}
 	
 
-	public static final String NOTEBOOK_NAME = "notebook.name";
-	public static final String NOTBOOK_GUID = "notebook.guid";
-	public static final String NOTE_GUID = "note.guid";
-	public static final String NOTE_NAME = "note.title";
-	public static final String NOTE_UPDATED = "note.updated";
-	public static final String NOTE_AUTHOR = "note.author";
-	public static final String NOTE_SOURCEAPP = "note.sourceapp";
-	public static final String NOTE_SOURCE = "note.source";
-	public static final String NOTE_SOURCEURL = "note.sourceurl";
+//	public static final String NOTEBOOK_NAME = "notebook.name";
+//	public static final String NOTBOOK_GUID = "notebook.guid";
+//	public static final String NOTE_GUID = "note.guid";
+//	public static final String NOTE_NAME = "note.title";
+//	public static final String NOTE_UPDATED = "note.updated";
+//	public static final String NOTE_AUTHOR = "note.author";
+//	public static final String NOTE_SOURCEAPP = "note.sourceapp";
+//	public static final String NOTE_SOURCE = "note.source";
+//	public static final String NOTE_SOURCEURL = "note.sourceurl";
 	
 	/**
 	 * Takes a node and sets it's properties for the Evernote note metadata 
@@ -274,26 +280,26 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			//FIXME setTags() on the properties from EvernoteAcc Object
 
 			
-			n.setProperty(NOTEBOOK_NAME, note.getNotebookGuid());
-			n.setProperty(NOTEBOOK_NAME, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
-			n.setProperty(NOTE_GUID, note.getGuid());
-			n.setProperty(NOTE_NAME, note.getTitle());
-			n.setProperty(NOTE_AUTHOR, note.getAttributes().getAuthor());
-			n.setProperty(NOTE_UPDATED, note.getUpdated());
-			n.setProperty(NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
-			n.setProperty(NOTE_SOURCE, note.getAttributes().getSource());
-			n.setProperty(NOTE_SOURCEURL, note.getAttributes().getSourceURL());
-			
-			
-//			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, note.getNotebookGuid());
-//			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
-//			n.setProperty(EvernoteAsset.Properites.NOTE_GUID, note.getGuid());
-//			n.setProperty(EvernoteAsset.Properites.NOTE_NAME, note.getTitle());
-//			n.setProperty(EvernoteAsset.Properites.NOTE_AUTHOR, note.getAttributes().getAuthor());
-//			n.setProperty(EvernoteAsset.Properites.NOTE_UPDATED, note.getUpdated());
-//			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
-//			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCE, note.getAttributes().getSource());
-//			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
+//			n.setProperty(NOTEBOOK_NAME, note.getNotebookGuid());
+//			n.setProperty(NOTEBOOK_NAME, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
+//			n.setProperty(NOTE_GUID, note.getGuid());
+//			n.setProperty(NOTE_NAME, note.getTitle());
+//			n.setProperty(NOTE_AUTHOR, note.getAttributes().getAuthor());
+//			n.setProperty(NOTE_UPDATED, note.getUpdated());
+//			n.setProperty(NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
+//			n.setProperty(NOTE_SOURCE, note.getAttributes().getSource());
+//			n.setProperty(NOTE_SOURCEURL, note.getAttributes().getSourceURL());
+//			
+//			
+			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, note.getNotebookGuid());
+			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, evAcc.getNotestore().getNotebook(note.getNotebookGuid()).getName());
+			n.setProperty(EvernoteAsset.Properites.NOTE_GUID, note.getGuid());
+			n.setProperty(EvernoteAsset.Properites.NOTE_NAME, note.getTitle());
+			n.setProperty(EvernoteAsset.Properites.NOTE_AUTHOR, note.getAttributes().getAuthor());
+			n.setProperty(EvernoteAsset.Properites.NOTE_UPDATED, note.getUpdated());
+			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
+			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCE, note.getAttributes().getSource());
+			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
 			return n;
 		} catch (RepositoryException | EDAMUserException | EDAMSystemException | EDAMNotFoundException | TException e) {
 			e.printStackTrace();

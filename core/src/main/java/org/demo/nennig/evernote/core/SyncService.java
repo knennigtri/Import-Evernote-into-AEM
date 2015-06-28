@@ -21,6 +21,6 @@ public interface SyncService {
 	
 	public boolean updateNode(Node n, String guid);
 
-	public Node createNode(String newNodeName, Node repo, String guid);
+	public Node createNode(String newNodeName, Node evSyncNode, String guid);
 	
 }
