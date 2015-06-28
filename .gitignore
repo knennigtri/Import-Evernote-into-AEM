@@ -21,3 +21,4 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+ui.apps/src/main/content/jcr_root/apps/evernote/config.personal/org.demo.nennig.evernote.core.impl.schedulers.EvernoteSyncTask-mgp.xml
