@@ -5,4 +5,5 @@
     </filter>
     <filter root="/apps/sling" />
     <filter root="/etc/designs/evernote"/>
+    <filter root="/home/users/e/evernote-sync-user"/>
 </workspaceFilter>
