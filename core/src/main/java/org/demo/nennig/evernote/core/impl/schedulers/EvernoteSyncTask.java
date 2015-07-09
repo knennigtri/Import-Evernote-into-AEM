@@ -99,7 +99,7 @@ public class EvernoteSyncTask implements Runnable {
 		        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
 		        	
 		        	//TODO Add import words to config file
-//		        	eSyncServiceImpl.syncWebClipperNotes("updated:day");
+		        	eSyncServiceImpl.syncWebClipperNotes("updated:day");
         		}
         		else
         		{

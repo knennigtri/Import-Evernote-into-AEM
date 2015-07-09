@@ -206,6 +206,7 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			Asset a = assetManager.createAsset("/content/dam/" + EVERNOTE_NODE_REPO + "/" + newNodeName,inputStream,"text/html",true);
 			
 			Node n;
+			//FIXME Not saving evernote properties as metadata. :(
 			try {
 				n = a.adaptTo(Node.class).getNode("jcr:content/metadata");
 				setMetadataProperties(note, n);
@@ -242,6 +243,7 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
 			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCE, note.getAttributes().getSource());
 			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
+			logger.info("added metadata to: " + n.getPath());
 			return n;
 	}
 }
