@@ -58,6 +58,11 @@ public class EvernoteAcc {
 		return noteStore;
 	}
 
+	public boolean newNotesToSync(){
+		//TODO implement a fix to slow down API calls to Evernote
+		return true;
+	}
+	
 	/**
 	 * Method to return a subset of notes based on a Evernote search.
 	 * The Evernote grammar can be found from the link below.

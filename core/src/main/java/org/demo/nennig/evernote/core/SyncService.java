@@ -3,6 +3,7 @@ package org.demo.nennig.evernote.core;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 /**
@@ -17,14 +18,8 @@ public interface SyncService {
 	
 	public void updateAll();
 	
-	public void syncNotes(String words) throws RepositoryException;
+	public void syncNotes(String words);
 	
-	public boolean deleteNode(Node node);
-	
-	public boolean updateNode(Node n, String guid);
-
-	public Node createNode(String newNodeName, Node evSyncNode, String guid);
-
-
+	public Resource createResource(String newNodeName, String guid);
 	
 }
