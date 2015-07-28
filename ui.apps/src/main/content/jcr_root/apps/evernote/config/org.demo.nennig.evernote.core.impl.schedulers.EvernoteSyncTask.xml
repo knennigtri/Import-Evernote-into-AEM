@@ -3,7 +3,9 @@
     jcr:primaryType="sling:OsgiConfig"
     evernote.dev="{Boolean}false"
     evernote.token=""
-    password=""
+    evernote.username=""
+    evernote.password=""
+    evernote.search.list="[]"
     scheduler.concurrent="{Boolean}false"
-    scheduler.expression="*/10 * * * * ?"
-    username=""/>
+    scheduler.expression="0 0/15 * * * ?"
+    />

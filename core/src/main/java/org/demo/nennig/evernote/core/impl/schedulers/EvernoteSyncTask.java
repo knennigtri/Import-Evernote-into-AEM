@@ -17,18 +17,14 @@ package org.demo.nennig.evernote.core.impl.schedulers;
 
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
-
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
-import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.commons.osgi.PropertiesUtil;
-import org.apache.sling.jcr.api.SlingRepository;
 import org.demo.nennig.evernote.core.EvernoteAcc;
 import org.demo.nennig.evernote.core.impl.EvernoteSyncServiceImpl;
 import org.slf4j.Logger;
@@ -44,32 +40,29 @@ import org.slf4j.LoggerFactory;
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
-//TODO Create an initial sync option. Boolean for inital sync. String for initial query with words
-@Component(immediate = true, metatype = true, label = "Evernote Configuration", description = "Basic sync task for Evernote")
+////TODO Create an initial sync option. Boolean for inital sync. String for initial query with words
+//@Component(immediate = true, metatype = true, label = "Evernote Configuration", description = "Basic sync task for Evernote")
+//@Service(value = Runnable.class)
+//
+//	// ***Dont change this value lower than 10 minutes since Evernote will throw an exception because the class is requesting too frequently.
+//@Property(name="scheduler.expression", value="*/20 * * * * ?") //Run every 10 minutes.
+
+@Component(immediate = true, metatype = true,
+label = "Evernote Sync Config")
 @Service(value = Runnable.class)
-@Properties({
-	// ***Dont change this value lower than 10 minutes since Evernote will throw an exception because the class is requesting too frequently.
-	@Property(name="scheduler.expression", value="*/10 * * * * ?"), //Run every 10 minutes.
-    @Property(name = "scheduler.concurrent", boolValue=false,
-        description = "Whether or not to schedule this task concurrently")
+@Properties({ 
+	@Property(name = "scheduler.expression", value = "0 0/15 * * * ?"), // Every 15 minutes
+	@Property(name = "scheduler.concurrent", boolValue=false)
 })
 public class EvernoteSyncTask implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+    private EvernoteAcc eAccount;
     
     @Reference
     private ResourceResolverFactory resolverFactory;
-    
-//	private SlingRepository repository;
-//
-//    /**
-//     * Binds the repository
-//     * @param repository Binds the repository to this class
-//     */
-//	public void bindRepository(SlingRepository repository) {
-//        this.repository = repository; 
-//    }
+
+    boolean debug = true;
     
 	/**
 	 * Method that runs regularly to sync any new Evernote notes that 
@@ -77,43 +70,51 @@ public class EvernoteSyncTask implements Runnable {
 	 */
     @Override
     public void run() {
-        EvernoteAcc eAccount = null;
         logger.debug("Running Evernote Sync Task...");
-        try {
-        	if(isDevMode){
-        		if(token != null && !token.isEmpty()){
-        			eAccount = new EvernoteAcc(token);
-        		}
-        	}
-        	else
-        	{
-        		if(username != null && !username.isEmpty()){
-	        		if(password != null && !password.isEmpty()){
-	        			eAccount = new EvernoteAcc(username, password);
-	        		}
-        		}
-        	}
-        	
-        	if(eAccount != null){
-        		if(resolverFactory != null){
-		        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
+        if(debug){
+        	debug=false;
+        	//Make sure there are search words for Evernote
+        	if(searchList != null && searchList.length > 0){
+		        try {
+		        	if(eAccount == null){
+			        	if(isDevMode){
+			        		if(token != null && !token.isEmpty()){
+			        			eAccount = new EvernoteAcc(token);
+			        		}
+			        	}
+			        	else
+			        	{
+			        		if(username != null && !username.isEmpty()){
+				        		if(password != null && !password.isEmpty()){
+				        			eAccount = new EvernoteAcc(username, password);
+				        		}
+			        		}
+			        	}
+		        	}
 		        	
-		        	//TODO Add import words to config file
-		        	eSyncServiceImpl.syncWebClipperNotes("updated:day");
-        		}
-        		else
-        		{
-        			logger.warn("Cannot connect to the repository");
-        		}
+		        	if(eAccount != null){
+		        		if(resolverFactory != null){
+				        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
+				        	eSyncServiceImpl.syncMultipleWordStatements(searchList);
+		        		}
+		        		else
+		        		{
+		        			logger.warn("Cannot connect to the repository");
+		        		}
+		        	}
+		        	else {
+		        		logger.warn("Evernote credentials not found. Suggest adding Oauth or a dev token to the configMgr.");
+		        		logger.info("username: " + username);
+		        		logger.info("devToken: " + token);
+		        	}
+				} catch (Exception e) {
+					logger.error("Evernote Sync Service Failed: " + e);
+				}
         	}
-        	else {
-        		logger.warn("Evernote credentials not found. Suggest adding Oauth or a dev token to the configMgr.");
-        		logger.info("username: " + username);
-        		logger.info("devToken: " + token);
+        	else{
+        		logger.info("No search terms given.");
         	}
-		} catch (Exception e) {
-			logger.error("Evernote Sync Service Failed: " + e);
-		}
+        }
     }
     
     @Property(label = "Username", description = "Enter your Evernote Username")
@@ -131,11 +132,10 @@ public class EvernoteSyncTask implements Runnable {
     @Property(label = "Developer Token", description = "Enter your Evernote Developer Token")
     public static final String EV_TOKEN = "evernote.token";
     private String token;
-
-    	//Potentially would add 'source:web.clip' to this value
-//    @Property(label = "Evernote Words (Search param)", description = "Enter Evernote word grammar to filter what is imported. Ex: updated:day This will update any notes in the last day.")
-//    public static final String EV_WORDS = "evernote.words";
-//    private String words;
+    
+    @Property(label = "Evernote word search", description = "Enter the desired sync words. For more information on how to write Evernote word statements, see https://dev.evernote.com/doc/articles/search_grammar.php", cardinality=Integer.MAX_VALUE)
+    public static final String EV_SEARCHLIST = "evernote.search.list";
+    private String[] searchList;
 
     /**
      * Activator method to get the properties from the configuration
@@ -155,6 +155,6 @@ public class EvernoteSyncTask implements Runnable {
         this.password = PropertiesUtil.toString(config.get(EV_PASSWORD), "");
         this.token = PropertiesUtil.toString(config.get(EV_TOKEN), "");
         this.isDevMode = PropertiesUtil.toBoolean(config.get(EV_DEV), false);
-//      this.search = PropertiesUtil.toString(config.get(EV_WORDS), "updated:day");
+        this.searchList = PropertiesUtil.toStringArray(config.get(EV_SEARCHLIST), null);
     }
 }
