@@ -4,10 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Value;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
@@ -16,6 +18,7 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.jcr.resource.JcrResourceUtil;
 import org.demo.nennig.evernote.core.EvernoteAcc;
 import org.demo.nennig.evernote.core.EvernoteAsset;
 import org.demo.nennig.evernote.core.SyncService;
@@ -24,12 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.AssetManager;
-import com.evernote.edam.error.EDAMNotFoundException;
-import com.evernote.edam.error.EDAMSystemException;
-import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.notestore.NoteList;
 import com.evernote.edam.type.Note;
-import com.evernote.thrift.TException;
 
 /**
  * This class allows for Evernote notes to be synced to AEM. The Asset node structure is created as
@@ -71,14 +70,17 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			resolverFactory = rrFactory;
 			evernoteAccount = evAcc;
 			
-			resourceResolver = resolverFactory.getServiceResourceResolver(null);
-		
-			//Check to see if there is the Evernote Sync Folder
-			if(resourceResolver.getResource("/content/dam/"+EVERNOTE_NODE_REPO) == null){
-				this.initiate(resourceResolver);
+			if(resolverFactory != null){
+				resourceResolver = resolverFactory.getServiceResourceResolver(null);
+				
+				
+				//Check to see if there is the Evernote Sync Folder
+				if(resourceResolver.getResource("/content/dam/"+EVERNOTE_NODE_REPO) == null){
+					this.initiate(resourceResolver);
+				}
+				
+				logger.debug("User ID is: " + resourceResolver.getUserID());
 			}
-			
-			logger.info("User ID is: " + resourceResolver.getUserID());
 		} catch (LoginException e) {
 			logger.error("Error getting resourceResolver " + e);
 		}
@@ -130,26 +132,26 @@ public class EvernoteSyncServiceImpl implements SyncService {
 		}
 		logger.error("Resource Added: " + evFolderResource.getPath());
 	}
-	
-	/**
-	 * This method looks at the synced Evernote notes and updates them based on the linked Evernote account
-	 * TODO Implement the updateAll() method
-	 */
-	@Override
-	public void updateAll() {
-//		syncRecent("");
-	}
 
 	/**
 	 * This method syncs only notes that have been added to Evernote based on the Web Clipper add on.
 	 * The Evernote grammar can be found from the link below.
 	 * @see <a href="https://dev.evernote.com/doc/articles/search_grammar.php">Evernote Grammar</a>
 	 * @param words String for Evernote search terms. Example: updated:day
-	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public void syncWebClipperNotes(String words) throws RepositoryException{
-		syncNotes(words + " source:web.clip");
-		syncNotes(words + " source:Clearly");
+	public void syncWordStatement(String words){
+		syncNotes(words);
+	}
+	
+	/**
+	 * This method syncs notes that are relative to the search terms given
+	 * @see <a href="https://dev.evernote.com/doc/articles/search_grammar.php">Evernote Grammar</a>
+	 * @param wordsList String[] for multiple Evernote search terms. Example: updated:day
+	 */
+	public void syncMultipleWordStatements(String[] wordsList){
+		for(String words : wordsList){
+			syncWordStatement(words);
+		}
 	}
 	
 	/**
@@ -161,18 +163,16 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 */
 	@Override
 	public void syncNotes(String words){
-			logger.debug("Checking for new notes with words: '" + words + "'");
+		//Check to see if there is anything to sync
+		if(evernoteAccount.newNotesToSync(words) == true){
+			logger.debug("New notes to sync with words: '" + words + "'");
 			
 			ResourceResolver resourceResolver = getResourceResolver();
 			Resource evFolderResource = resourceResolver.getResource("/content/dam/" + EVERNOTE_NODE_REPO);
 			
-			NoteList nl = null;
-			if(evernoteAccount.newNotesToSync() == true){
-				nl = evernoteAccount.getRequestedNotes(words);
-			}
+			NoteList nl = evernoteAccount.getRequestedNotes(words);
 				
 			if(nl != null && evFolderResource != null){
-				logger.debug("looking for new notes to Sync...");
 				Resource curRes = null;
 				for (Note note : nl.getNotes()) {
 					logger.debug("Found Note: " + note.getTitle());
@@ -181,7 +181,7 @@ public class EvernoteSyncServiceImpl implements SyncService {
 					curRes = resourceResolver.getResource(evFolderResource, guid);
 					//If the note does not exist in the JCR
 					if(curRes == null){
-						createResource(nodeName, guid);
+						createResource(resourceResolver, nodeName, guid);
 					}
 					else {
 						logger.info("Note already exists");
@@ -193,32 +193,30 @@ public class EvernoteSyncServiceImpl implements SyncService {
 				}
 			}
 			commitAndCloseResourceResolver(resourceResolver);
+		}
 	}
 
-	public Resource createResource(String newNodeName, String guid){
+	public Resource createResource(ResourceResolver rr, String newNodeName, String guid){
 		logger.debug("Creating note resource: '" + newNodeName + "'");
-		
-		try {
-			Note note = evernoteAccount.getNotestore().getNote(guid, true, true, false, false);
+			
+		Note note = evernoteAccount.getNote(guid);
+		if(note != null){
 			InputStream inputStream = new ByteArrayInputStream(note.getContent().getBytes(Charset.forName("UTF-8")));
-
-			AssetManager assetManager = getResourceResolver().adaptTo(AssetManager.class);
+			
+			AssetManager assetManager = rr.adaptTo(AssetManager.class);
 			Asset a = assetManager.createAsset("/content/dam/" + EVERNOTE_NODE_REPO + "/" + newNodeName,inputStream,"text/html",true);
 			
-			Node n;
-			//FIXME Not saving evernote properties as metadata. :(
+			Node parNode = null;
 			try {
-				n = a.adaptTo(Node.class).getNode("jcr:content/metadata");
-				setMetadataProperties(note, n);
+				Session s = rr.adaptTo(Session.class);
+				parNode = s.getNode(a.getPath() + "/jcr:content");
+				Node node = JcrResourceUtil.createPath(parNode,"metadata","nt:unstructured","nt:unstructured",true);
+				setMetadataProperties(evernoteAccount, note, node);
+				s.save();
 			} catch (RepositoryException e) {
-				logger.error("cannot create propeties :(" + e);
+				logger.error("Cannot create metadata on note asset: " + e);
 			}
-			
-		} catch (EDAMUserException | EDAMSystemException
-				| EDAMNotFoundException | TException e) {
-			logger.error("Cannot create resource" + e);
 		}
-		
 		return null;
 	}
 	
@@ -229,12 +227,17 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 * @return The node with all the metadata properties
 	 * @throws RepositoryException 
 	 */
-	private Node setMetadataProperties(Note note, Node n) throws RepositoryException {
+	private Node setMetadataProperties(EvernoteAcc ev, Note note, Node n) throws RepositoryException {
 
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");
 			
-			//FIXME setTags() on the properties from EvernoteAcc Object
+//			List<String> tagList = ev.getTags(note);
+//			Value[] tagArr = tagList.toArray(new Value[tagList.size()]);
+//			logger.debug("Tag Array: " + tagArr.toString());
+			
+//			n.setProperty("cq:tags", tagArr);
+			n.setProperty("cq:tags", ev.getTagArray(note));
 			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, note.getNotebookGuid());
 			n.setProperty(EvernoteAsset.Properites.NOTE_GUID, note.getGuid());
 			n.setProperty(EvernoteAsset.Properites.NOTE_NAME, note.getTitle());

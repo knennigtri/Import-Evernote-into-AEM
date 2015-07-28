@@ -10,10 +10,17 @@ import com.evernote.auth.EvernoteAuth;
 import com.evernote.auth.EvernoteService;
 import com.evernote.clients.ClientFactory;
 import com.evernote.clients.NoteStoreClient;
+import com.evernote.edam.error.EDAMNotFoundException;
+import com.evernote.edam.error.EDAMSystemException;
+import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.notestore.NoteFilter;
 import com.evernote.edam.notestore.NoteList;
+import com.evernote.edam.notestore.NotesMetadataList;
+import com.evernote.edam.notestore.NotesMetadataResultSpec;
+import com.evernote.edam.notestore.SyncState;
 import com.evernote.edam.type.Note;
 import com.evernote.edam.type.Tag;
+import com.evernote.thrift.TException;
 
 /**
  * Creates an Evernote account object
@@ -29,19 +36,21 @@ import com.evernote.edam.type.Tag;
 public class EvernoteAcc {
 	private static final EvernoteService evService = EvernoteService.PRODUCTION;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private int lastSyncState = 0;
 	
 	NoteStoreClient noteStore;
 	
 	public EvernoteAcc(String username, String password){
-		//FIXME implement OAuth
+		//TODO implement OAuth
 	}
 	
-	public EvernoteAcc(String devToken) {
+	public EvernoteAcc(String devToken){
 		try {
 			// Set up the NoteStore client 
 			EvernoteAuth evernoteAuth = new EvernoteAuth(evService, devToken);
 			ClientFactory factory = new ClientFactory(evernoteAuth);
 			noteStore = factory.createNoteStoreClient();
+			lastSyncState = 0;
 			logger.debug("Connection to Evernote account established.");
 		} catch (Exception e) {
 			logger.error("Cannot connect to the Evernote account. Consider checking your credentials and you internet connection");
@@ -49,17 +58,53 @@ public class EvernoteAcc {
 		}
 	}
 
-	/**
-	 * This method is used to get the NoteStore from Evernote. 
-	 * This can be used to return notes and other objects from Evernote
-	 * @return The notestore that holds all Evernote notes and metadata
-	 */
-	public NoteStoreClient getNotestore() {
-		return noteStore;
+	public Note getNote(String guid){
+		Note n = null;
+		try {
+			n = noteStore.getNote(guid, true, true, false, false);
+		} catch (EDAMUserException e) {
+			logger.error("Error getting Note: " + e);
+		} catch (EDAMSystemException e) {
+			logger.error("Error getting Note: " + e);
+		} catch (EDAMNotFoundException e) {
+			logger.error("Error getting Note: " + e);
+		} catch (TException e) {
+			logger.error("Error getting Note: " + e);
+		}
+		return n;
 	}
-
-	public boolean newNotesToSync(){
-		//TODO implement a fix to slow down API calls to Evernote
+	
+	public boolean newNotesToSync(String words){
+		SyncState ss;
+		try {
+			ss = noteStore.getSyncState();
+			int userChanges = ss.getUpdateCount();
+//			logger.debug("prevCount: " + lastSyncState + " || userChanges: " +userChanges);
+			//Check to see if any notes in the user account have changed
+			if(userChanges > lastSyncState){
+				NotesMetadataResultSpec spec = new NotesMetadataResultSpec();
+				spec.setIncludeTitle(true);
+				spec.setIncludeUpdated(true);
+				NoteFilter filter = new NoteFilter();
+				
+				filter.setWords(words);
+				NotesMetadataList nml = noteStore.findNotesMetadata(filter,0,1,spec);
+				//Check to see if any new notes have been added in relation to the given words
+				if(nml.getTotalNotes() > 0){
+					return true;
+				}
+				lastSyncState = userChanges;
+			}
+			
+		} catch (EDAMUserException e) {
+			e.printStackTrace();
+		} catch (EDAMSystemException e) {
+			e.printStackTrace();
+		} catch (TException e) {
+			e.printStackTrace();
+		}catch (EDAMNotFoundException e) {
+			e.printStackTrace();
+		}
 		return true;
 	}
 	
@@ -82,25 +127,24 @@ public class EvernoteAcc {
 		return null;
 	}
 
-	/**
-	 * Method to get the get the Evernote tags from a note.
-	 * @param note - Evernote note
-	 * @return - tags form the input note
-	 */
-	public List<Tag> getTags(Note note) {
-		List<Tag> tags = new ArrayList<Tag>();
+	public String[] getTagArray(Note note) {
+		//FIXME Will not pull tag names from notes...
+		String[] arr = null;
 		  if(note.getTagGuidsSize() > 0){
-			  for(String tagStr : note.getTagGuids()){
+			  arr = new String[note.getTagGuidsSize()];
+			  String tagGuid;
+			  for(int i = 0; i < arr.length -1; i++){
+				  tagGuid = note.getTagGuids().get(i);
 				  Tag tag;
-				try {
-					tag = noteStore.getTag(tagStr);
-				} catch (Exception e) {
-					tag = null;
-					e.printStackTrace();
-				} 
-				 tags.add(tag);
+				  try {
+					tag = noteStore.getTag(tagGuid);
+				  } catch (Exception e) {
+					logger.error("Cannot get tags: " + e);
+					return null;
+				  } 
+				  arr[i] = EvernoteAsset.TAG_NAMESPACE + ":" + tag.getName();
 			  }
 		  }
-		  return tags;
+		  return arr;
 	}
 }

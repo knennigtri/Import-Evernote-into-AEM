@@ -16,10 +16,8 @@ public interface SyncService {
 
 	void initiate(ResourceResolver resourceResolver);
 	
-	public void updateAll();
-	
 	public void syncNotes(String words);
 	
-	public Resource createResource(String newNodeName, String guid);
+	public Resource createResource(ResourceResolver rr, String newNodeName, String guid);
 	
 }

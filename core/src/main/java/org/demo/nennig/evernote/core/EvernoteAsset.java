@@ -14,6 +14,7 @@ import org.apache.sling.api.resource.Resource;
 import com.day.cq.dam.api.Asset;
 
 public class EvernoteAsset{
+	public static final String TAG_NAMESPACE = "evernote";
 	private Asset asset;
 
 	public static class Properites{
