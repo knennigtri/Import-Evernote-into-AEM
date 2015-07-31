@@ -3,6 +3,7 @@ package org.demo.nennig.evernote.core.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.ValueFactory;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
@@ -28,6 +30,9 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.AssetManager;
+import com.day.cq.tagging.InvalidTagFormatException;
+import com.day.cq.tagging.Tag;
+import com.day.cq.tagging.TagManager;
 import com.evernote.edam.notestore.NoteList;
 import com.evernote.edam.type.Note;
 
@@ -45,7 +50,6 @@ import com.evernote.edam.type.Note;
 public class EvernoteSyncServiceImpl implements SyncService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static String EVERNOTE_NODE_REPO = "evernote-sync";
-	private static String EVERNOTE_ASSETS = "evernote-assets";
 	private EvernoteAcc evernoteAccount;
 	
 	private ResourceResolverFactory resolverFactory;
@@ -224,6 +228,17 @@ public class EvernoteSyncServiceImpl implements SyncService {
 				setMetadataProperties(evernoteAccount, note, node);
 				
 				s.save();
+				
+				
+//				TagManager tagManager = rr.adaptTo(TagManager.class);
+//				tagManager.createTag(EvernoteAsset.TAG_NAMESPACE, "Evernote Tags", "This is a namespace for imported Evernote tags");
+//				String[] strArr = evernoteAccount.getTagArray(note);
+//				Tag[] tags = new Tag[strArr.length];
+//				for(int i=0;i<strArr.length;i++	){
+//					tags[i] = tagManager.createTag(strArr[i], strArr[i], "This tag was imported from Evernote");
+//				}
+//				tagManager.setTags(a.adaptTo(Resource.class), tags);
+				
 			} catch (RepositoryException e) {
 				logger.error("Cannot create metadata on note asset: " + e);
 			}
@@ -243,7 +258,10 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");
 			
-			n.setProperty("cq:tags", ev.getTagArray(note));
+;
+			
+//			JcrUtil.setProperty(n, "tags", new String[]{"hello","nennig"});
+//			n.setProperty("tags", ev.getTagArray(note));
 			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, note.getNotebookGuid());
 			n.setProperty(EvernoteAsset.Properites.NOTE_GUID, note.getGuid());
 			n.setProperty(EvernoteAsset.Properites.NOTE_NAME, note.getTitle());
