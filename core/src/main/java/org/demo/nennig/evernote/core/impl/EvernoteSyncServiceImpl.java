@@ -25,6 +25,7 @@ import org.demo.nennig.evernote.core.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.commons.jcr.JcrUtil;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.AssetManager;
 import com.evernote.edam.notestore.NoteList;
@@ -44,6 +45,7 @@ import com.evernote.edam.type.Note;
 public class EvernoteSyncServiceImpl implements SyncService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static String EVERNOTE_NODE_REPO = "evernote-sync";
+	private static String EVERNOTE_ASSETS = "evernote-assets";
 	private EvernoteAcc evernoteAccount;
 	
 	private ResourceResolverFactory resolverFactory;
@@ -209,9 +211,18 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			Node parNode = null;
 			try {
 				Session s = rr.adaptTo(Session.class);
+				
+				//copy in the evernote thumbnail for the assetfinder
+				Node srcNode = s.getNode("/apps/evernote/components/content/note-viewer/thumbnail.png");
+				Node dstParent = s.getNode(a.getPath() + "/jcr:content/renditions");
+				JcrUtil.copy(srcNode, dstParent, "thumbnail.png", true);
+				
+				
+				//Set the the note's metadata on the metadata node
 				parNode = s.getNode(a.getPath() + "/jcr:content");
 				Node node = JcrResourceUtil.createPath(parNode,"metadata","nt:unstructured","nt:unstructured",true);
 				setMetadataProperties(evernoteAccount, note, node);
+				
 				s.save();
 			} catch (RepositoryException e) {
 				logger.error("Cannot create metadata on note asset: " + e);
@@ -232,11 +243,6 @@ public class EvernoteSyncServiceImpl implements SyncService {
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");
 			
-//			List<String> tagList = ev.getTags(note);
-//			Value[] tagArr = tagList.toArray(new Value[tagList.size()]);
-//			logger.debug("Tag Array: " + tagArr.toString());
-			
-//			n.setProperty("cq:tags", tagArr);
 			n.setProperty("cq:tags", ev.getTagArray(note));
 			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, note.getNotebookGuid());
 			n.setProperty(EvernoteAsset.Properites.NOTE_GUID, note.getGuid());
