@@ -3,13 +3,13 @@
     jcr:mixinTypes="[]"
     jcr:primaryType="dam:Asset">
     <jcr:content
-        jcr:lastModified="{Date}2015-06-27T19:46:11.352-07:00"
+        jcr:lastModified="{Date}2015-07-30T20:48:33.814-07:00"
         jcr:lastModifiedBy="admin"
         jcr:primaryType="dam:AssetContent">
         <metadata
             dam:Bitsperpixel="{Long}32"
             dam:Comments="Software: Adobe ImageReady&#xa;"
-            dam:extracted="{Date}2015-06-27T19:46:11.264-07:00"
+            dam:extracted="{Date}2015-07-30T20:48:33.659-07:00"
             dam:Fileformat="PNG"
             dam:MIMEtype="image/png"
             dam:Numberofimages="{Long}1"
