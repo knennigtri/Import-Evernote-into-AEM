@@ -1,4 +1,4 @@
-package apps.evernote.components.content.evernote;
+package apps.evernote.components.content.note_viewer;
 import com.adobe.cq.sightly.WCMUse;
 import com.day.cq.wcm.api.components.DropTarget;
 
@@ -16,7 +16,7 @@ import org.demo.nennig.evernote.core.EvernoteAsset;
 //import org.demo.nennig.evernote.core.EvernoteAsset.Properites;
 
 
-public class Evernote extends WCMUse {
+public class EViewer extends WCMUse {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private String fileReference;
 	private Asset asset;
@@ -33,10 +33,11 @@ public class Evernote extends WCMUse {
 			logger.error("FileReference: " + fileReference);
 			Resource rs = getResourceResolver().getResource(fileReference);
 			
-			EvernoteAsset evAsset = new EvernoteAsset(rs);
-			htmloutput = evAsset.getContent();
-			title = evAsset.getMetadata(EvernoteAsset.NOTE_NAME).toString();
-			
+			if(rs != null){
+				EvernoteAsset evAsset = new EvernoteAsset(rs);
+				htmloutput = evAsset.getContent();
+				//title = evAsset.getMetadata(EvernoteAsset.NOTE_NAME).toString();
+			}
 //		    Asset asset = rs.adaptTo(Asset.class); 
 //		    Resource original = asset.getOriginal();
 //		    InputStream stream = original.adaptTo(InputStream.class);

@@ -18,14 +18,14 @@
 (function ($, ns, channel, window, undefined) {
 
     var self = {},
-        name = 'Evernote Notes';
+        name = 'Evernote';
 
         // make the loadAssets fuction more flexible
     self.searchRoot = '/content/dam/evernote-sync';
 
     var searchPath = self.searchRoot,
         imageServlet = '/bin/wcm/contentfinder/asset/view.html',
-        itemResourceType = 'cq/gui/components/authoring/assetfinder/asset';
+        itemResourceType = 'evernote/components/content/note-viewer/asset';
 
     
     /**
