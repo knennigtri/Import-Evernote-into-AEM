@@ -13,6 +13,12 @@
  * Dissemination of this information or reproduction of this material
  * is strictly forbidden unless prior written permission is obtained
  * from Adobe Systems Incorporated.
+ * 
+ * 
+ * Adapted from /libs/cq/gui/components/authoring/clientlibs/assetfinder
+ * client library folder.
+ * @author Kevin Nennig (knennig213@gmail.com)
+ * 
  */
 ;
 (function ($, ns, channel, window, undefined) {

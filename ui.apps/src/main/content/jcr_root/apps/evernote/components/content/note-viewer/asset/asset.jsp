@@ -13,6 +13,13 @@
   Dissemination of this information or reproduction of this material
   is strictly forbidden unless prior written permission is obtained
   from Adobe Systems Incorporated.
+  
+  Adapted from /libs/cq/gui/components/authoring/assetfinder/asset/asset.jsp
+  The asset card will now display a humnan readable evernote title on the 
+  asset card
+  
+  @author Kevin Nennig (knennig213@gmail.com)
+  
 --%>
 <%@ page import="com.adobe.granite.security.user.util.AuthorizableUtil,
                  com.adobe.granite.ui.components.AttrBuilder,
