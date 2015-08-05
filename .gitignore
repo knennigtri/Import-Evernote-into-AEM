@@ -25,3 +25,7 @@ buildNumber.properties
 ui.apps/src/main/content/jcr_root/apps/evernote/config.personal/org.demo.nennig.evernote.core.impl.schedulers.EvernoteSyncTask.xml
 
 ui.apps/src/main/content/jcr_root/apps/evernote/config.author.personal/org.demo.nennig.evernote.core.impl.schedulers.EvernoteSyncTask.xml
+
+ui.content/.classpath
+
+core/.classpath
