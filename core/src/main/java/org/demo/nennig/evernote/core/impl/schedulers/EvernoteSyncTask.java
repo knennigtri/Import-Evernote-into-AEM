@@ -26,6 +26,7 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.demo.nennig.evernote.core.EvernoteAcc;
+import org.demo.nennig.evernote.core.EvernoteSyncService;
 import org.demo.nennig.evernote.core.impl.EvernoteSyncServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +100,7 @@ public class EvernoteSyncTask implements Runnable {
 		        	
 		        	if(eAccount != null){
 		        		if(resolverFactory != null){
-				        	EvernoteSyncServiceImpl eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
+				        	EvernoteSyncService eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
 				        	eSyncServiceImpl.syncMultipleWordStatements(searchList);
 		        		}
 		        		else
