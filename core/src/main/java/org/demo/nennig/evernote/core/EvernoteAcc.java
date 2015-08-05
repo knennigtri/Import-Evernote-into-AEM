@@ -127,36 +127,12 @@ public class EvernoteAcc {
 		return null;
 	}
 
-	/**
-	 * Method to get the get the Evernote tags from a note.
-	 * @param note - Evernote note
-	 * @return - tags form the input note
-	 */
-	public List<String> getTags(Note note) {
-		//FIXME Will not pull tag names from notes...
-		List<String> tags = new ArrayList<String>();
-		  if(note.getTagGuidsSize() > 0){
-			  for(String tagGuid : note.getTagGuids()){
-				  Tag tag;
-				  try {
-					tag = noteStore.getTag(tagGuid);
-				  } catch (Exception e) {
-					logger.error("Cannot get tags: " + e);
-					return null;
-				  } 
-				  tags.add(EvernoteAsset.TAG_NAMESPACE + ":" + tag.getName());
-			  }
-		  }
-		  return tags;
-	}
-
 	public String[] getTagArray(Note note) {
-		//FIXME Will not pull tag names from notes...
-		String[] arr = null;
-		  if(note.getTagGuidsSize() > 0){
-			  arr = new String[note.getTagGuidsSize()];
+		List<String> tagList = new ArrayList<String>();
+			int numofTags = note.getTagGuidsSize();
+		  if(numofTags > 0){
 			  String tagGuid;
-			  for(int i = 0; i < arr.length -1; i++){
+			  for(int i = 0; i < numofTags-1; i++){
 				  tagGuid = note.getTagGuids().get(i);
 				  Tag tag;
 				  try {
@@ -165,9 +141,11 @@ public class EvernoteAcc {
 					logger.error("Cannot get tags: " + e);
 					return null;
 				  } 
-				  arr[i] = tag.getName();
+				  if((tag != null) && !tag.getName().isEmpty()){
+					  tagList.add(tag.getName());
+				  }
 			  }
 		  }
-		  return arr;
+		  return tagList.toArray(new String[tagList.size()]);
 	}
 }

@@ -81,41 +81,37 @@ public class EvernoteSyncTask implements Runnable {
         if(isDevMode){
         	//Make sure there are search words for Evernote
         	if(searchList != null && searchList.length > 0){
-		        try {
-		        	if(eAccount == null){
-			        	if(isDevMode){
-			        		if(token != null && !token.isEmpty()){
-			        			eAccount = new EvernoteAcc(token);
-			        		}
-			        	}
-			        	else
-			        	{
-			        		if(username != null && !username.isEmpty()){
-				        		if(password != null && !password.isEmpty()){
-				        			eAccount = new EvernoteAcc(username, password);
-				        		}
-			        		}
-			        	}
-		        	}
-		        	
-		        	if(eAccount != null){
-		        		if(resolverFactory != null){
-				        	EvernoteSyncService eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
-				        	eSyncServiceImpl.syncMultipleWordStatements(searchList);
-		        		}
-		        		else
-		        		{
-		        			logger.warn("Cannot connect to the repository");
+	        	if(eAccount == null){
+		        	if(isDevMode){
+		        		if(token != null && !token.isEmpty()){
+		        			eAccount = new EvernoteAcc(token);
 		        		}
 		        	}
-		        	else {
-		        		logger.warn("Evernote credentials not found. Suggest adding Oauth or a dev token to the configMgr.");
-		        		logger.info("username: " + username);
-		        		logger.info("devToken: " + token);
+		        	else
+		        	{
+		        		if(username != null && !username.isEmpty()){
+			        		if(password != null && !password.isEmpty()){
+			        			eAccount = new EvernoteAcc(username, password);
+			        		}
+		        		}
 		        	}
-				} catch (Exception e) {
-					logger.error("Evernote Sync Service Failed: " + e);
-				}
+	        	}
+	        	
+	        	if(eAccount != null){
+	        		if(resolverFactory != null){
+			        	EvernoteSyncService eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
+			        	eSyncServiceImpl.syncMultipleWordStatements(searchList);
+	        		}
+	        		else
+	        		{
+	        			logger.warn("Cannot connect to the repository");
+	        		}
+	        	}
+	        	else {
+	        		logger.warn("Evernote credentials not found. Suggest adding Oauth or a dev token to the configMgr.");
+	        		logger.info("username: " + username);
+	        		logger.info("devToken: " + token);
+	        	}
         	}
         	else{
         		logger.info("No search terms given.");

@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -14,6 +15,7 @@ import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
@@ -21,9 +23,10 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.jcr.resource.JcrResourceUtil;
+import org.apache.sling.serviceusermapping.ServiceUserMapper;
 import org.demo.nennig.evernote.core.EvernoteAcc;
 import org.demo.nennig.evernote.core.EvernoteAsset;
-import org.demo.nennig.evernote.core.SyncService;
+import org.demo.nennig.evernote.core.EvernoteSyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,21 +43,20 @@ import com.evernote.edam.type.Note;
  * This class allows for Evernote notes to be synced to AEM. The Asset node structure is created as
  * well as methods to import/update/delete the Evernote Asset nodes. Currently only initial import
  * is supported. Updates of nodes will come in later updates.
- * Implements the {@link SyncService} for Evernote.
+ * Implements the {@link EvernoteSyncService} for Evernote.
  * 
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
-@Service(value = SyncService.class)
+@Service(value = EvernoteSyncService.class)
 @Component(immediate = true)
-public class EvernoteSyncServiceImpl implements SyncService {
+public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static String EVERNOTE_NODE_REPO = "evernote-sync";
 	private EvernoteAcc evernoteAccount;
 	
-	private ResourceResolverFactory resolverFactory;
-	
-	
+//	@Reference
+	 private ResourceResolverFactory resolverFactory;
 	
 	/**
 	 * Default constructor. Null values will be given and a {@link RepositoryException} will occur
@@ -72,23 +74,15 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 */
 	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAcc evAcc){
 		ResourceResolver resourceResolver = null;
-		try {
-			resolverFactory = rrFactory;
-			evernoteAccount = evAcc;
+		resolverFactory = rrFactory;
+		evernoteAccount = evAcc;
+		if(resolverFactory != null){
+			resourceResolver = getResourceResolver();	
 			
-			if(resolverFactory != null){
-				resourceResolver = resolverFactory.getServiceResourceResolver(null);
-				
-				
-				//Check to see if there is the Evernote Sync Folder
-				if(resourceResolver.getResource("/content/dam/"+EVERNOTE_NODE_REPO) == null){
-					this.initiate(resourceResolver);
-				}
-				
-				logger.debug("User ID is: " + resourceResolver.getUserID());
+			//Check to see if there is the Evernote Sync Folder
+			if((resourceResolver != null) && (resourceResolver.getResource("/content/dam/"+EVERNOTE_NODE_REPO) == null)){
+				this.initiate(resourceResolver);
 			}
-		} catch (LoginException e) {
-			logger.error("Error getting resourceResolver " + e);
 		}
 		
 		commitAndCloseResourceResolver(resourceResolver);
@@ -97,9 +91,13 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	private ResourceResolver getResourceResolver(){
 		ResourceResolver resourceResolver = null;
 		try {
-			resourceResolver = resolverFactory.getServiceResourceResolver(null);
+			Map<String, Object> param = new HashMap<String, Object>();
+	        param.put(ResourceResolverFactory.SUBSERVICE, "evernote-sync");
+	        resourceResolver = resolverFactory.getServiceResourceResolver(param);
+     
+	        logger.debug("User ID is: " + resourceResolver.getUserID());
 		} catch (LoginException e) {
-			logger.error("Login failed: " + e);
+			logger.error("Login failed. Could not get ResourceResolver: " + e);
 		}
 		return resourceResolver;
 	}
@@ -120,7 +118,6 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 * Initiates the sync process. If there isn't an Evernote node in the dam,
 	 * then this will create it.
 	 */
-	@Override
 	public void initiate(ResourceResolver resourceResolver) {
 		Resource damFolderResource = null;
 		Resource evFolderResource = null;
@@ -167,38 +164,39 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 * @param words String for Evernote search terms. Example: updated:day
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	@Override
 	public void syncNotes(String words){
 		//Check to see if there is anything to sync
 		if(evernoteAccount.newNotesToSync(words) == true){
 			logger.debug("New notes to sync with words: '" + words + "'");
 			
 			ResourceResolver resourceResolver = getResourceResolver();
-			Resource evFolderResource = resourceResolver.getResource("/content/dam/" + EVERNOTE_NODE_REPO);
-			
-			NoteList nl = evernoteAccount.getRequestedNotes(words);
+			if(resourceResolver != null){
+				Resource evFolderResource = resourceResolver.getResource("/content/dam/" + EVERNOTE_NODE_REPO);
 				
-			if(nl != null && evFolderResource != null){
-				Resource curRes = null;
-				for (Note note : nl.getNotes()) {
-					logger.debug("Found Note: " + note.getTitle());
-					String guid = note.getGuid();
-					String nodeName = guid;
-					curRes = resourceResolver.getResource(evFolderResource, guid);
-					//If the note does not exist in the JCR
-					if(curRes == null){
-						createResource(resourceResolver, nodeName, guid);
-					}
-					else {
-						logger.info("Note already exists");
-						//TODO Check to see if the resource should be updated
-//						if(noteNode.getProperty(noteUpdatedProperty).getLong() < note.getUpdated()){
-//							updateNode(noteNode, guid);
-//						}
+				NoteList nl = evernoteAccount.getRequestedNotes(words);
+					
+				if(nl != null && evFolderResource != null){
+					Resource curRes = null;
+					for (Note note : nl.getNotes()) {
+						logger.debug("Found Note: " + note.getTitle());
+						String guid = note.getGuid();
+						String nodeName = guid;
+						curRes = resourceResolver.getResource(evFolderResource, guid);
+						//If the note does not exist in the JCR
+						if(curRes == null){
+							createResource(resourceResolver, nodeName, guid);
+						}
+						else {
+							logger.info("Note already exists");
+							//TODO Check to see if the resource should be updated
+	//						if(noteNode.getProperty(noteUpdatedProperty).getLong() < note.getUpdated()){
+	//							updateNode(noteNode, guid);
+	//						}
+						}
 					}
 				}
+				commitAndCloseResourceResolver(resourceResolver);
 			}
-			commitAndCloseResourceResolver(resourceResolver);
 		}
 	}
 
@@ -224,26 +222,41 @@ public class EvernoteSyncServiceImpl implements SyncService {
 				
 				//Set the the note's metadata on the metadata node
 				parNode = s.getNode(a.getPath() + "/jcr:content");
-				Node node = JcrResourceUtil.createPath(parNode,"metadata","nt:unstructured","nt:unstructured",true);
-				setMetadataProperties(evernoteAccount, note, node);
+				Node matadataNode = JcrResourceUtil.createPath(parNode,"metadata","nt:unstructured","nt:unstructured",true);
+				setMetadataProperties(evernoteAccount, note, matadataNode);
 				
-				s.save();
-				
-				
-//				TagManager tagManager = rr.adaptTo(TagManager.class);
-//				tagManager.createTag(EvernoteAsset.TAG_NAMESPACE, "Evernote Tags", "This is a namespace for imported Evernote tags");
-//				String[] strArr = evernoteAccount.getTagArray(note);
-//				Tag[] tags = new Tag[strArr.length];
-//				for(int i=0;i<strArr.length;i++	){
-//					tags[i] = tagManager.createTag(strArr[i], strArr[i], "This tag was imported from Evernote");
-//				}
-//				tagManager.setTags(a.adaptTo(Resource.class), tags);
-				
+				//Syncs the Evernote tags to the new resource
+				String[] tagArr = evernoteAccount.getTagArray(note);
+				if((tagArr != null) && (tagArr.length > 0)){
+					TagManager tagManager = rr.adaptTo(TagManager.class);
+					try {
+						Tag namespace = tagManager.createTag(EvernoteAsset.TAG_NAMESPACE + ":", "Evernote Tags", "This is a namespace for imported Evernote tags", true);
+						Tag[] tags = new Tag[tagArr.length];
+						for(int i=0;i<tagArr.length;i++	){
+							String tagName = tagArr[i];
+							if((tagName != null) && !tagName.isEmpty()){
+								tags[i] = tagManager.createTag(makeTagID(namespace.getName(),tagArr[i]), tagArr[i], "imported evernote tag", true);
+							}
+						}
+						Resource metadataResource = rr.getResource(a.getPath() + "/jcr:content/metadata");
+						tagManager.setTags(metadataResource, tags);
+					} catch (AccessControlException | InvalidTagFormatException e) {
+						logger.error("Cannot create tag: " + e);
+					}
+				}
 			} catch (RepositoryException e) {
 				logger.error("Cannot create metadata on note asset: " + e);
 			}
 		}
 		return null;
+	}
+	
+	private static String makeTagID(String namespace, String title){
+		String tagID = namespace + ":";
+		title = title.toLowerCase();
+		title = title.replace(" ", "_");
+		tagID = tagID + title;
+		return tagID;
 	}
 	
 	/**
@@ -254,14 +267,8 @@ public class EvernoteSyncServiceImpl implements SyncService {
 	 * @throws RepositoryException 
 	 */
 	private Node setMetadataProperties(EvernoteAcc ev, Note note, Node n) throws RepositoryException {
-
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");
-			
-;
-			
-//			JcrUtil.setProperty(n, "tags", new String[]{"hello","nennig"});
-//			n.setProperty("tags", ev.getTagArray(note));
 			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, note.getNotebookGuid());
 			n.setProperty(EvernoteAsset.Properites.NOTE_GUID, note.getGuid());
 			n.setProperty(EvernoteAsset.Properites.NOTE_NAME, note.getTitle());
