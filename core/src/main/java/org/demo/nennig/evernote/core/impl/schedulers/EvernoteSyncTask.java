@@ -61,8 +61,6 @@ public class EvernoteSyncTask implements Runnable {
     
     @Reference
     private ResourceResolverFactory resolverFactory;
-
-    boolean debug = true;
     
 	/**
 	 * Method that runs regularly to sync any new Evernote notes that 
@@ -71,8 +69,15 @@ public class EvernoteSyncTask implements Runnable {
     @Override
     public void run() {
         logger.debug("Running Evernote Sync Task...");
-        if(debug){
-        	debug=false;
+        /* Used to force a 1 time import... without this, 
+         * the Evernote API shuts off your connection to their cloud services...
+         * Since Schedulers don't run initially and wait based on the scheduler.expression,
+         * I have a personal EvernoteSyncTask config, that has a scheduler.expression property 
+         * to run every 1 minute. Then along with this variable, the Evernote API is called
+         * after 1 minute and then stops calling it. This is enough for debugging.
+         * TODO Forces sync to happen once
+         */
+        if(isDevMode){
         	//Make sure there are search words for Evernote
         	if(searchList != null && searchList.length > 0){
 		        try {
@@ -114,6 +119,8 @@ public class EvernoteSyncTask implements Runnable {
         	else{
         		logger.info("No search terms given.");
         	}
+        	
+        	isDevMode = false; //TODO Forces sync to happen once
         }
     }
     
