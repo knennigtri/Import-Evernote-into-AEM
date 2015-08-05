@@ -3,11 +3,11 @@
     jcr:primaryType="cq:Page">
     <jcr:content
         cq:designPath="/etc/designs/evernote"
-        cq:lastModified="{Date}2015-06-02T00:28:22.724-07:00"
+        cq:lastModified="{Date}2015-08-05T01:47:47.608-05:00"
         cq:lastModifiedBy="admin"
         cq:template="/apps/evernote/templates/page-home"
         jcr:primaryType="cq:PageContent"
-        jcr:title="Products"
+        jcr:title="Note Page"
         sling:resourceType="evernote/components/page/page-home">
         <par
             jcr:primaryType="nt:unstructured"

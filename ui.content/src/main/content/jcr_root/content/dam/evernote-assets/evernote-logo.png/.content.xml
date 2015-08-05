@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:tiff="http://ns.adobe.com/tiff/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dam="http://www.day.com/dam/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-    jcr:mixinTypes="[]"
-    jcr:primaryType="dam:Asset">
+<jcr:root xmlns:tiff="http://ns.adobe.com/tiff/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dam="http://www.day.com/dam/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:isCheckedOut="{Boolean}true"
+    jcr:mixinTypes="[mix:versionable]"
+    jcr:primaryType="dam:Asset"
+    jcr:uuid="0e0e845b-8ba8-4301-b989-81ff38f5ee5e">
     <jcr:content
-        jcr:lastModified="{Date}2015-07-30T20:48:33.814-07:00"
+        cq:name="evernote-logo.png"
+        cq:parentPath="/content/dam/evernote-assets"
+        jcr:lastModified="{Date}2015-08-05T00:39:56.413-05:00"
         jcr:lastModifiedBy="admin"
         jcr:primaryType="dam:AssetContent">
         <metadata
             dam:Bitsperpixel="{Long}32"
             dam:Comments="Software: Adobe ImageReady&#xa;"
-            dam:extracted="{Date}2015-07-30T20:48:33.659-07:00"
+            dam:extracted="{Date}2015-08-05T00:39:55.848-05:00"
             dam:Fileformat="PNG"
             dam:MIMEtype="image/png"
             dam:Numberofimages="{Long}1"
@@ -22,6 +26,9 @@
             dam:sha1="029b166db20a496eb8a8fb9a1a7a07e8e382a270"
             dam:size="{Long}9353"
             dc:format="image/png"
+            dc:modified="{Date}2015-08-05T00:39:55.788-05:00"
+            jcr:lastModified="{Date}2015-08-05T00:39:55.788-05:00"
+            jcr:lastModifiedBy="admin"
             jcr:mixinTypes="[cq:Taggable]"
             jcr:primaryType="nt:unstructured"
             tiff:ImageLength="{Long}294"

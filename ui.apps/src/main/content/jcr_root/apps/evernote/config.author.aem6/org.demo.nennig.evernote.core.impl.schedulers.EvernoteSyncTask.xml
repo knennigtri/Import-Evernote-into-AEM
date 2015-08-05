@@ -2,10 +2,9 @@
 <jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
     jcr:primaryType="sling:OsgiConfig"
     evernote.dev="{Boolean}false"
-    evernote.token=""
-    evernote.username=""
     evernote.password=""
     evernote.search.list="[]"
+    evernote.token=""
+    evernote.username=""
     scheduler.concurrent="{Boolean}false"
-    scheduler.expression="0 0/15 * * * ?"
-    />
+    scheduler.expression="0 0/15 * * * ?"/>

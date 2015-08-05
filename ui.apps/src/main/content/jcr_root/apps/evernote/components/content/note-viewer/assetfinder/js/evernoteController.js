@@ -1,4 +1,5 @@
-	/*
+
+/*
  * ADOBE CONFIDENTIAL
  *
  * Copyright 2014 Adobe Systems Incorporated
@@ -47,7 +48,7 @@
         var param = {
                 '_dc': new Date().getTime(),  // cache killer
                 'query': query,
-                'mimeType': 'text/html,text,application/xhtml+xml',
+                'mimeType': 'text/html',
                 'itemResourceType': itemResourceType, // single item rendering (cards)
                 'limit': lowerLimit + ".." + upperLimit,
                 '_charset_': 'utf-8'
@@ -56,7 +57,7 @@
         return $.ajax({
             type: 'GET',
             dataType: 'html',
-            url: Granite.HTTP.externalize(imageServlet) + searchPath,
+            url: Granite.HTTP.externalize(imageServlet),
             data: param
         });
     };

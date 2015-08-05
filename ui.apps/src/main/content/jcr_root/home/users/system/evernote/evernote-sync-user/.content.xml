@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:rep="internal"
+    jcr:primaryType="rep:SystemUser"
+    jcr:uuid="e5f5d6c3-7121-3518-abeb-3d93bbcb1e19"
+    rep:authorizableId="evernote-sync-user"
+    rep:principalName="evernote-sync-user"
+    name="Evernote Sync User"/>

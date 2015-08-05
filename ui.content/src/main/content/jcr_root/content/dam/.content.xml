@@ -5,13 +5,15 @@
     <rep:policy/>
     <jcr:content/>
     <collections/>
-    <geometrixx/>
+    <catalogs/>
     <geometrixx-outdoors/>
+    <geometrixx/>
     <geometrixx-media/>
     <geometrixx-unlimited/>
     <geometrixx-gov/>
     <formsanddocuments/>
+    <home/>
     <projects/>
-    <evernote-sync/>
     <evernote-assets/>
+    <evernote-sync/>
 </jcr:root>
