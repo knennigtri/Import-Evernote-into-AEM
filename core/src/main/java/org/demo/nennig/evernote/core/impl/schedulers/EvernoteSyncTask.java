@@ -89,8 +89,8 @@ public class EvernoteSyncTask implements Runnable {
 		        	}
 		        	else
 		        	{
-		        		if(username != null && !username.isEmpty()){
-			        		if(password != null && !password.isEmpty()){
+		        		if(password != null && !password.isEmpty()){
+		        			if(username != null && !username.isEmpty()){
 			        			eAccount = new EvernoteAcc(username, password);
 			        		}
 		        		}
@@ -99,7 +99,7 @@ public class EvernoteSyncTask implements Runnable {
 	        	
 	        	if(eAccount != null){
 	        		if(resolverFactory != null){
-			        	EvernoteSyncService eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount);
+			        	EvernoteSyncService eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount, username);
 			        	eSyncServiceImpl.syncMultipleWordStatements(searchList);
 	        		}
 	        		else

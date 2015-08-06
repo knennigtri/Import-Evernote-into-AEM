@@ -54,6 +54,7 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static String EVERNOTE_NODE_REPO = "evernote-sync";
 	private EvernoteAcc evernoteAccount;
+	private String evernoteUsername;
 	
 //	@Reference
 	 private ResourceResolverFactory resolverFactory;
@@ -63,19 +64,24 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
 	public EvernoteSyncServiceImpl(){
-		this(null,null);
+		this(null,null,"");
 	};
 
+	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAcc evAcc){
+		this(rrFactory, evAcc, "Dev");
+	}
+	
 	/**
 	 * Constructor for this class. Does all the initializations for this class.
 	 * @param repo Repository that will have Evernote notes imported into
 	 * @param evAcc The Evernote account that will supply the notes
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAcc evAcc){
+	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAcc evAcc, String username){
 		ResourceResolver resourceResolver = null;
 		resolverFactory = rrFactory;
 		evernoteAccount = evAcc;
+		evernoteUsername = username;
 		if(resolverFactory != null){
 			resourceResolver = getResourceResolver();	
 			
@@ -87,6 +93,9 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 		
 		commitAndCloseResourceResolver(resourceResolver);
 	}
+	
+	
+	
 	
 	private ResourceResolver getResourceResolver(){
 		ResourceResolver resourceResolver = null;
@@ -267,16 +276,24 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	 * @throws RepositoryException 
 	 */
 	private Node setMetadataProperties(EvernoteAcc ev, Note note, Node n) throws RepositoryException {
+			//Properties for asset organization
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");
-			n.setProperty(EvernoteAsset.Properites.NOTEBOOK_NAME, note.getNotebookGuid());
-			n.setProperty(EvernoteAsset.Properites.NOTE_GUID, note.getGuid());
-			n.setProperty(EvernoteAsset.Properites.NOTE_NAME, note.getTitle());
-			n.setProperty(EvernoteAsset.Properites.NOTE_AUTHOR, note.getAttributes().getAuthor());
-			n.setProperty(EvernoteAsset.Properites.NOTE_UPDATED, note.getUpdated());
-			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
-			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCE, note.getAttributes().getSource());
-			n.setProperty(EvernoteAsset.Properites.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
+			n.setProperty(EvernoteAsset.Properties.NOTE_GUID, note.getGuid());
+			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
+			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCE, note.getAttributes().getSource());
+			
+			//Properties for Display
+			n.setProperty(EvernoteAsset.Properties.NOTE_NAME, note.getTitle());
+			n.setProperty(EvernoteAsset.Properties.NOTEBOOK_NAME, note.getNotebookGuid());
+			//FIXME Change Author to save the user account accessing Evernote
+			n.setProperty(EvernoteAsset.Properties.NOTE_AUTHOR, evernoteUsername);
+			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
+			n.setProperty(EvernoteAsset.Properties.NOTE_CREATED, note.getCreated());
+			n.setProperty(EvernoteAsset.Properties.NOTE_UPDATED, note.getUpdated());
+			
+			
+			
 			logger.info("added metadata to: " + n.getPath());
 			return n;
 	}

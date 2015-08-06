@@ -8,12 +8,14 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.wcm.api.AuthoringUIMode;
 
+import java.util.Date;
+import java.util.TimeZone;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.lang.StringBuilder;
 import java.io.InputStreamReader;
 import org.demo.nennig.evernote.core.EvernoteAsset;
-//import org.demo.nennig.evernote.core.EvernoteAsset.Properites;
+import org.demo.nennig.evernote.core.EvernoteAsset.Properties;
 
 
 public class EViewer extends WCMUse {
@@ -24,7 +26,6 @@ public class EViewer extends WCMUse {
 	//Objects to return to the presentation layer
 	private StringBuilder htmloutput;
 	private String dropTargetsClassName, placeholderClassName;
-	private String title;
 	
 	@Override
     public void activate() throws Exception {
@@ -36,20 +37,16 @@ public class EViewer extends WCMUse {
 			if(rs != null){
 				EvernoteAsset evAsset = new EvernoteAsset(rs);
 				htmloutput = evAsset.getContent();
-				//title = evAsset.getMetadata(EvernoteAsset.NOTE_NAME).toString();
+                
+				title = evAsset.getMetadata(EvernoteAsset.Properties.NOTE_NAME);
+                evernoteNoteBook = evAsset.getMetadata(EvernoteAsset.Properties.NOTEBOOK_NAME);
+                noteFoundBy = evAsset.getMetadata(EvernoteAsset.Properties.NOTE_AUTHOR);
+                sourceURL = evAsset.getMetadata(EvernoteAsset.Properties.NOTE_SOURCEURL);
+                noteFoundOn = evAsset.getMetadata(EvernoteAsset.Properties.NOTE_CREATED);
+                noteUpdatedOn = evAsset.getMetadata(EvernoteAsset.Properties.NOTE_UPDATED);
+                
+                tags = evAsset.getTags();
 			}
-//		    Asset asset = rs.adaptTo(Asset.class); 
-//		    Resource original = asset.getOriginal();
-//		    InputStream stream = original.adaptTo(InputStream.class);
-//
-//		    //Put the inputstream into a string to return
-//		    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-//	        htmloutput = new StringBuilder();
-//	        String line;
-//	        while ((line = reader.readLine()) != null) {
-//	            htmloutput.append(line);
-//	        }
-//	        title = asset.getMetadata("note.title").toString(); 
 		}
 		dropTargetsClassName = DropTarget.CSS_CLASS_PREFIX + "fileReference";
 		
@@ -66,15 +63,60 @@ public class EViewer extends WCMUse {
 	public String getCssClass(){
 		return dropTargetsClassName + " " + placeholderClassName;
 	}
-	
-	public String getTitle(){
-		return title;
-	}
-	
-	public String getHtml(){
+    
+    public String getHtml(){
 		if(htmloutput == null){
 			return "";
 		}
 		return htmloutput.toString();
+	}
+	
+    private String title = "";
+	public String getTitle(){
+		return title;
+	}
+    
+    private String evernoteNoteBook = "";
+    public String getEvernoteNotebook(){
+		return evernoteNoteBook;
+	}
+    
+    private String noteFoundBy = "";
+    public String getNoteFoundBy(){
+		return noteFoundBy;
+	}
+    
+    private String sourceURL = "";
+    public String getSourceURL(){
+		return sourceURL;
+	}
+    
+    private String noteFoundOn = "";
+    public String getNoteFoundOn(){
+        //FIXME Date not working
+//        long ts = System.currentTimeMillis();
+//	    Date localTime = new Date(ts);
+//	    Date utcTime = new Date(noteFoundOn);
+//	    // Convert UTC to Local Time
+//	    Date fromGmt = new Date(utcTime.getTime() + TimeZone.getDefault().getOffset(localTime.getTime()));
+//		return fromGmt.toString();
+        return noteFoundOn;
+	}
+    
+    private String noteUpdatedOn = "";
+    public String getNoteUpdatedOn(){
+        //FIXME Date not working
+//        long ts = System.currentTimeMillis();
+//	    Date localTime = new Date(ts);
+//	    Date utcTime = new Date(noteUpdatedOn);
+//	    // Convert UTC to Local Time
+//	    Date fromGmt = new Date(utcTime.getTime() + TimeZone.getDefault().getOffset(localTime.getTime()));
+//		return fromGmt.toString();
+        return noteUpdatedOn;
+	}
+    
+    private String[] tags;
+	public String[] getTags(){
+		return tags;
 	}
 }

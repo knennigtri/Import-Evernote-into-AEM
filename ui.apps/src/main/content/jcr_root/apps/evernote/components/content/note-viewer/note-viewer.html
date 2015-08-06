@@ -1,4 +1,14 @@
-<h1 data-sly-use.ev="EViewer">${ev.title || ''}</h1>
+<h1 data-sly-use.ev="EViewer">${ev.title || 'NOPE'}</h1>
+<p>Resource Accessed By: ${ev.noteFoundBy || 'NOPE'}</p>
+<p>URL: ${ev.sourceURL || 'NOPE'}</p>
+<p>Date Accessed: ${ev.noteFoundOn || 'NOPE'}</p>
+<p>Metadata Last Modified: ${ev.noteUpdatedOn || 'NOPE'}</p>
+<ul data-sly-list="${ev.tags}">
+    <li>Tag: ${item || 'NOPE'}</li>
+</ul>
+<p>-------------------------------------------------------------------------------------</p>
+<p>-------------------------------------------------------------------------------------</p>
+<p>-------------------------------------------------------------------------------------</p>
 <div  class="${ev.cssClass || ''}"
 		title="${ev.title || ''}"
 		data-emptytext="Evernote Asset">
