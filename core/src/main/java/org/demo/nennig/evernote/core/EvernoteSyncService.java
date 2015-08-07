@@ -9,8 +9,8 @@ package org.demo.nennig.evernote.core;
  */
 public interface EvernoteSyncService {
 
-	public void syncWordStatement(String words);
+	public void syncNotes(String[] wordStatementList);
 	
-	public void syncMultipleWordStatements(String[] wordsList);
+	public void syncNotes(String wordStatement);
 	
 }

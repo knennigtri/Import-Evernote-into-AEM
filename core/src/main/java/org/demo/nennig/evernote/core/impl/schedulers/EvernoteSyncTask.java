@@ -100,7 +100,7 @@ public class EvernoteSyncTask implements Runnable {
 	        	if(eAccount != null){
 	        		if(resolverFactory != null){
 			        	EvernoteSyncService eSyncServiceImpl = new EvernoteSyncServiceImpl(resolverFactory, eAccount, username);
-			        	eSyncServiceImpl.syncMultipleWordStatements(searchList);
+			        	eSyncServiceImpl.syncNotes(searchList);
 	        		}
 	        		else
 	        		{

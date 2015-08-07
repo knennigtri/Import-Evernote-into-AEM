@@ -127,7 +127,7 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	 * Initiates the sync process. If there isn't an Evernote node in the dam,
 	 * then this will create it.
 	 */
-	public void initiate(ResourceResolver resourceResolver) {
+	private void initiate(ResourceResolver resourceResolver) {
 		Resource damFolderResource = null;
 		Resource evFolderResource = null;
 		damFolderResource = resourceResolver.getResource("/content/dam/");
@@ -146,23 +146,13 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	}
 
 	/**
-	 * This method syncs only notes that have been added to Evernote based on the Web Clipper add on.
-	 * The Evernote grammar can be found from the link below.
-	 * @see <a href="https://dev.evernote.com/doc/articles/search_grammar.php">Evernote Grammar</a>
-	 * @param words String for Evernote search terms. Example: updated:day
-	 */
-	public void syncWordStatement(String words){
-		syncNotes(words);
-	}
-	
-	/**
 	 * This method syncs notes that are relative to the search terms given
 	 * @see <a href="https://dev.evernote.com/doc/articles/search_grammar.php">Evernote Grammar</a>
-	 * @param wordsList String[] for multiple Evernote search terms. Example: updated:day
+	 * @param wordStatementList String[] for multiple Evernote search terms. Example: updated:day
 	 */
-	public void syncMultipleWordStatements(String[] wordsList){
-		for(String words : wordsList){
-			syncWordStatement(words);
+	public void syncNotes(String[] wordStatementList){
+		for(String wordStatement : wordStatementList){
+			syncNotes(wordStatement);
 		}
 	}
 	
@@ -170,19 +160,19 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	 * This method syncs notes that have been added to Evernote based upon the given search term
 	 * The Evernote grammar can be found from the link below.
 	 * @see <a href="https://dev.evernote.com/doc/articles/search_grammar.php">Evernote Grammar</a>
-	 * @param words String for Evernote search terms. Example: updated:day
+	 * @param wordStatement String for Evernote search terms. Example: updated:day
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public void syncNotes(String words){
+	public void syncNotes(String wordStatement){
 		//Check to see if there is anything to sync
-		if(evernoteAccount.newNotesToSync(words) == true){
-			logger.debug("New notes to sync with words: '" + words + "'");
+		if(evernoteAccount.newNotesToSync(wordStatement) == true){
+			logger.debug("New notes to sync with words: '" + wordStatement + "'");
 			
 			ResourceResolver resourceResolver = getResourceResolver();
 			if(resourceResolver != null){
 				Resource evFolderResource = resourceResolver.getResource("/content/dam/" + EVERNOTE_NODE_REPO);
 				
-				NoteList nl = evernoteAccount.getRequestedNotes(words);
+				NoteList nl = evernoteAccount.getRequestedNotes(wordStatement);
 					
 				if(nl != null && evFolderResource != null){
 					Resource curRes = null;
@@ -209,7 +199,7 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 		}
 	}
 
-	public Resource createResource(ResourceResolver rr, String newNodeName, String guid){
+	private Resource createResource(ResourceResolver rr, String newNodeName, String guid){
 		logger.debug("Creating note resource: '" + newNodeName + "'");
 			
 		Note note = evernoteAccount.getNote(guid);
@@ -286,7 +276,6 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 			//Properties for Display
 			n.setProperty(EvernoteAsset.Properties.NOTE_NAME, note.getTitle());
 			n.setProperty(EvernoteAsset.Properties.NOTEBOOK_NAME, note.getNotebookGuid());
-			//FIXME Change Author to save the user account accessing Evernote
 			n.setProperty(EvernoteAsset.Properties.NOTE_AUTHOR, evernoteUsername);
 			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
 			n.setProperty(EvernoteAsset.Properties.NOTE_CREATED, note.getCreated());
