@@ -144,3 +144,13 @@ div.parbase.textimage .text {
     position: relative;
     top: -38px;
 }
+div.evernote-inner-component{
+  margin: 10px;   
+}
+
+div.evernote-component {
+    boarder: black;
+    border-style: dashed;
+    border-width: 2px;
+   
+}

@@ -25,7 +25,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.commons.osgi.PropertiesUtil;
-import org.demo.nennig.evernote.core.EvernoteAcc;
+import org.demo.nennig.evernote.core.EvernoteAccount;
 import org.demo.nennig.evernote.core.EvernoteSyncService;
 import org.demo.nennig.evernote.core.impl.EvernoteSyncServiceImpl;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ label = "Evernote Sync Config")
 public class EvernoteSyncTask implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private EvernoteAcc eAccount;
+    private EvernoteAccount eAccount;
     
     @Reference
     private ResourceResolverFactory resolverFactory;
@@ -84,14 +84,14 @@ public class EvernoteSyncTask implements Runnable {
 	        	if(eAccount == null){
 		        	if(isDevMode){
 		        		if(token != null && !token.isEmpty()){
-		        			eAccount = new EvernoteAcc(token);
+		        			eAccount = new EvernoteAccount(token);
 		        		}
 		        	}
 		        	else
 		        	{
 		        		if(password != null && !password.isEmpty()){
 		        			if(username != null && !username.isEmpty()){
-			        			eAccount = new EvernoteAcc(username, password);
+			        			eAccount = new EvernoteAccount(username, password);
 			        		}
 		        		}
 		        	}

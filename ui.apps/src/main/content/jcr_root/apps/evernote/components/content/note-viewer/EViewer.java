@@ -10,10 +10,12 @@ import com.day.cq.wcm.api.AuthoringUIMode;
 
 import java.util.Date;
 import java.util.TimeZone;
+import java.text.SimpleDateFormat;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.lang.StringBuilder;
 import java.io.InputStreamReader;
+import javax.jcr.Value;
 import org.demo.nennig.evernote.core.EvernoteAsset;
 import org.demo.nennig.evernote.core.EvernoteAsset.Properties;
 
@@ -93,30 +95,16 @@ public class EViewer extends WCMUse {
     
     private String noteFoundOn = "";
     public String getNoteFoundOn(){
-        //FIXME Date not working
-//        long ts = System.currentTimeMillis();
-//	    Date localTime = new Date(ts);
-//	    Date utcTime = new Date(noteFoundOn);
-//	    // Convert UTC to Local Time
-//	    Date fromGmt = new Date(utcTime.getTime() + TimeZone.getDefault().getOffset(localTime.getTime()));
-//		return fromGmt.toString();
         return noteFoundOn;
 	}
     
     private String noteUpdatedOn = "";
     public String getNoteUpdatedOn(){
-        //FIXME Date not working
-//        long ts = System.currentTimeMillis();
-//	    Date localTime = new Date(ts);
-//	    Date utcTime = new Date(noteUpdatedOn);
-//	    // Convert UTC to Local Time
-//	    Date fromGmt = new Date(utcTime.getTime() + TimeZone.getDefault().getOffset(localTime.getTime()));
-//		return fromGmt.toString();
         return noteUpdatedOn;
 	}
     
-    private String[] tags;
-	public String[] getTags(){
+    private Value[] tags;
+	public Value[] getTags(){
 		return tags;
 	}
 }

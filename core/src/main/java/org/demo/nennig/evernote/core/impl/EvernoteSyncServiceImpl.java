@@ -24,7 +24,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.jcr.resource.JcrResourceUtil;
 import org.apache.sling.serviceusermapping.ServiceUserMapper;
-import org.demo.nennig.evernote.core.EvernoteAcc;
+import org.demo.nennig.evernote.core.EvernoteAccount;
 import org.demo.nennig.evernote.core.EvernoteAsset;
 import org.demo.nennig.evernote.core.EvernoteSyncService;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ import com.evernote.edam.type.Note;
 public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static String EVERNOTE_NODE_REPO = "evernote-sync";
-	private EvernoteAcc evernoteAccount;
+	private EvernoteAccount evernoteAccount;
 	private String evernoteUsername;
 	
 //	@Reference
@@ -67,7 +67,7 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 		this(null,null,"");
 	};
 
-	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAcc evAcc){
+	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAccount evAcc){
 		this(rrFactory, evAcc, "Dev");
 	}
 	
@@ -77,7 +77,7 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	 * @param evAcc The Evernote account that will supply the notes
 	 * @throws RepositoryException Thrown if the repo cannot be created
 	 */
-	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAcc evAcc, String username){
+	public EvernoteSyncServiceImpl(ResourceResolverFactory rrFactory, EvernoteAccount evAcc, String username){
 		ResourceResolver resourceResolver = null;
 		resolverFactory = rrFactory;
 		evernoteAccount = evAcc;
@@ -265,7 +265,7 @@ public class EvernoteSyncServiceImpl implements EvernoteSyncService {
 	 * @return The node with all the metadata properties
 	 * @throws RepositoryException 
 	 */
-	private Node setMetadataProperties(EvernoteAcc ev, Note note, Node n) throws RepositoryException {
+	private Node setMetadataProperties(EvernoteAccount ev, Note note, Node n) throws RepositoryException {
 			//Properties for asset organization
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");

@@ -33,18 +33,18 @@ import com.evernote.thrift.TException;
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
-public class EvernoteAcc {
+public class EvernoteAccount {
 	private static final EvernoteService evService = EvernoteService.PRODUCTION;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private int lastSyncState = 0;
 	
 	NoteStoreClient noteStore;
 	
-	public EvernoteAcc(String username, String password){
+	public EvernoteAccount(String username, String password){
 		//TODO implement OAuth
 	}
 	
-	public EvernoteAcc(String devToken){
+	public EvernoteAccount(String devToken){
 		try {
 			// Set up the NoteStore client 
 			EvernoteAuth evernoteAuth = new EvernoteAuth(evService, devToken);

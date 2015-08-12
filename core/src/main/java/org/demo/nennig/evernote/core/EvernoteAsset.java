@@ -4,17 +4,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.jackrabbit.commons.JcrUtils;
-import org.apache.jackrabbit.oak.commons.PropertiesUtil;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.jcr.resource.JcrResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,17 +72,27 @@ public class EvernoteAsset{
 		} catch (RepositoryException e) {
 			logger.info("Could not get property: " + propName);
 		}
+		//If the property is a date, create the correct date string
+		if(propName.equals(Properties.NOTE_CREATED) || propName.equals(Properties.NOTE_UPDATED)){
+			long ts = System.currentTimeMillis();
+		    Date localTime = new Date(ts);
+		    Date utcTime = new Date();
+		    // Convert UTC to Local Time
+		    Date fromGmt = new Date(utcTime.getTime() + TimeZone.getDefault().getOffset(localTime.getTime()));
+			str =  fromGmt.toString();
+		}
 		return str;
 	}
 	
-	public String[] getTags(){
-		String[] strArr = null;
+	public Value[] getTags(){
+		Value[] valArr = null;
 		try {
 			//FIXME get a string[] for the tags
-			strArr = new String[]{JcrUtils.getStringProperty(metadataNode, "", "")};
+			Property p = metadataNode.getProperty("cq:tags");
+			valArr = p.getValues();
 		} catch (RepositoryException e) {
 			logger.info("Could not get tags");
 		}
-		return strArr;
+		return valArr;
 	}
 }
