@@ -1,22 +1,29 @@
-<div class="evernote-component">
-<div  class="evernote-inner-component" data-sly-use.ev="EViewer" data-sly-test.isEmpty="${ev.title}">
-	<h1>${ev.title || ''}</h1>
-	<p><b>Resource Accessed By:</b> 
+<div data-sly-use.ev="EViewer" data-sly-test.notEmpty="${ev.title}" class="${notEmpty ? 'evernote-component' : ''}">
+    <div>
+	  <h1>${ev.title || ''}</h1>
+	  <p><b>Resource Accessed By:</b> 
         ${ev.noteFoundBy || ''}</p>
-    <p><b>Original Resource:</b> 
+      <p><b>Original Resource:</b> 
         <a href="${ev.sourceURL @ context='html'}">${ev.sourceURL || '' @ context='text'}</a></p>
-    <p><b>Date Accessed:</b> 
+      <p><b>Date Accessed:</b> 
         ${ev.noteFoundOn || ''}</p>
-    <p><b>Metadata Last Modified:</b> 
+      <p><b>Metadata Last Modified:</b> 
         ${ev.noteUpdatedOn || ''}</p>
-	<p data-sly-list="${ev.tags}">
+	  <p data-sly-list="${ev.tags}">
         <b data-sly-test="${itemList.index == 0}">Tags:</b>
 	    "${item.getString || ''}"
         <sly data-sly-test="${!itemList.last}">,</sly>
-	</p>
-</div>
-<div  class="${ev.cssClass || ''} evernote-inner-component"
+	  </p>
+    </div>
+    <div  class="${ev.cssClass}"
+		title="${ev.title || ''}">
+		${ev.html @ context='unsafe'}</div>
+    </div>
+
+<div data-sly-test="${!notEmpty}">
+    <div  class="${ev.cssClass}"
 		title="${ev.title || ''}"
 		data-emptytext="Evernote Asset">
-		${ev.html @ context='unsafe'}</div>
+    </div>
+
 </div>
