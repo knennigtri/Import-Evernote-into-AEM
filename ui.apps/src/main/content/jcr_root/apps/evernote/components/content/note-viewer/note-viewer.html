@@ -1,29 +1,35 @@
-<div data-sly-use.ev="EViewer" data-sly-test.notEmpty="${ev.title}" class="${notEmpty ? 'evernote-component' : ''}">
-    <div>
-	  <h1>${ev.title || ''}</h1>
-	  <p><b>Resource Accessed By:</b> 
-        ${ev.noteFoundBy || ''}</p>
-      <p><b>Original Resource:</b> 
+<div id="${notEmpty ? 'evernote-component' : ''}" data-sly-use.ev="EViewer" data-sly-test.notEmpty="${ev.title}">
+    <div class="evernote-metadata">
+      <h1>${ev.title || ''}</h1>
+	  <div id="left-col" >
+        <p><b>Resource Accessed By:</b> 
+            ${ev.noteFoundBy || ''}</p>
+        <p><b>Original Resource:</b> 
         <a href="${ev.sourceURL @ context='html'}">${ev.sourceURL || '' @ context='text'}</a></p>
-      <p><b>Date Accessed:</b> 
-        ${ev.noteFoundOn || ''}</p>
-      <p><b>Metadata Last Modified:</b> 
-        ${ev.noteUpdatedOn || ''}</p>
-	  <p data-sly-list="${ev.tags}">
-        <b data-sly-test="${itemList.index == 0}">Tags:</b>
-	    "${item.getString || ''}"
-        <sly data-sly-test="${!itemList.last}">,</sly>
-	  </p>
+      
+         <div data-sly-list="${ev.tags}">
+            <b data-sly-test="${itemList.index == 0}">Tags:</b>
+            <div class="tags">[${item.getString || ''}] </div>
+         </div>
+        
+      </div>
+      <div id="right-col">
+          <p><b>Date Accessed:</b> 
+            ${ev.noteFoundOn || ''}</p>
+          <p><b>Metadata Last Modified:</b>         
+            ${ev.noteUpdatedOn || ''}</p>
+      </div>
     </div>
-    <div  class="${ev.cssClass}"
-		title="${ev.title || ''}">
-		${ev.html @ context='unsafe'}</div>
+    
+    <div id="evernote-content" class="${ev.cssClass}">
+		${ev.html @ context='unsafe'}
     </div>
+</div>    
 
-<div data-sly-test="${!notEmpty}">
-    <div  class="${ev.cssClass}"
+   <div  data-sly-test="${!notEmpty}">
+      <div  class="${ev.cssClass} evernote-author"
 		title="${ev.title || ''}"
 		data-emptytext="Evernote Asset">
-    </div>
+     </div>
 
-</div>
+   </div>

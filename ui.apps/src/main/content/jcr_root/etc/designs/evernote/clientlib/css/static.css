@@ -1,18 +1,3 @@
-/*
- *  Copyright 2014 Adobe Systems Incorporated
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 html {
     height: 100%;
 }
@@ -20,11 +5,8 @@ html {
 .evernote-body {
     margin: 0;
     padding: 0;
-
     height: 100%;
-
     background-color: #6FB536;
-
 }
 
 .evernote-body,
@@ -44,113 +26,66 @@ html {
     text-decoration: underline;
 }
 
-.evernote-body h1 {
+ h1 {
     color: #025c1f;
-    text-transform: uppercase;
 }
 
 .evernote-panel {
     margin-left: auto;
     margin-right: auto;
     padding: 0 10px;
-
     width: 940px;
-
     background-color: #FFFFFF;
-
     box-shadow: 0 0 9px 1px rgba(0,0,0,.2);
     -moz-box-shadow: 0 0 9px 1px -moz-rgba(0,0,0,.2);
     -webkit-box-shadow: 0 0 9px 1px rgba(0,0,0,.2);
     zoom: 100%;
 }
 
-.evernote-topnav {
-    float: right;
-    position: relative;
-    top: -50px;
-}
-
-.evernote-topnav ul {
-    list-style: none;
-}
-
-.evernote-topnav ul li {
-    float: left;
-    margin-left: 15px;
-}
-
-.evernote-topnav ul li.selected {
-    font-weight: bold;
-}
-
-.evernote-text--center {
-    text-align: center;
-}
-
-.evernote-footer {
-    bottom: 0;
-    margin-top: 10px;
-}
 
 /* parsys component */
 div.par {
     clear: both;
 }
 
-div.parsys_column {
-    height: 100%;
-    width: 100%;
-    float: left;
-    border: 0;
-    vertical-align: top;
-    padding: 0;
-    margin: 0;
+
+div.evernote-metadata{
+  margin: 10px;
 }
 
-div.parsys_column .section {
-    overflow:hidden;
-    width: 100%;
+#right-col{
+   float:right;
+    width:50%;
+    position:relative;
+    margin-bottom: 10px;
+}
+#left-col{
+   float:left;
+    width:50%;
+    position:relative;
+    margin-bottom: 10px;
 }
 
-/* column control layouts */
-div.cq-colctrl-cols {
-    width: 100%;
-    float: left;
+#evernote-content{
+  border-top-width: thick;
+  border-top-color: #6FB536;
+  border-top-style: groove;
+  margin: 10px;
+  width: 98%;
+  clear: both;
 }
 
-div.cq-colctrl-default {
-    width: 100%;
+#evernote-component {
+    border-style:groove;
+    border-width: 5px;
+    border-color: #6FB536;
+    margin: 3px;
 }
 
-/* layout 0 : 50% 50% ( grid6 + grid6 ) */
-div.cq-colctrl-lt0 {
-}
-div.cq-colctrl-lt0-c0 {
-    width: calc(50% - 10px);
-    margin-right:10px;
-}
-div.cq-colctrl-lt0-c1 {
-    width: calc(50% - 10px);
-    margin-left: 10px
+div.evernote-author {
+  margin-bottom: 15px;  
 }
 
-
-div.parbase.image {
-    text-align: center;
-}
-
-div.parbase.textimage .text {
-    margin-left: 35px;
-    position: relative;
-    top: -38px;
-}
-div.evernote-inner-component{
-  margin: 10px;   
-}
-
-div.evernote-component {
-    boarder: black;
-    border-style: dashed;
-    border-width: 2px;
-    margin: 10px;
+div.tags{
+  display: inline;
 }
