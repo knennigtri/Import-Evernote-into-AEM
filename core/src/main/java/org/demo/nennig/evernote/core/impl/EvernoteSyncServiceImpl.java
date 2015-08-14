@@ -26,7 +26,6 @@ import org.apache.sling.jcr.resource.JcrResourceUtil;
 import org.apache.sling.serviceusermapping.ServiceUserMapper;
 import org.demo.nennig.evernote.core.EvernoteAccount;
 import org.demo.nennig.evernote.core.EvernoteAsset;
-import org.demo.nennig.evernote.core.EvernoteSyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,9 +47,8 @@ import com.evernote.edam.type.Note;
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
-@Service(value = EvernoteSyncService.class)
-@Component(immediate = true)
-public class EvernoteSyncServiceImpl implements EvernoteSyncService {
+
+public class EvernoteSyncServiceImpl {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static String EVERNOTE_NODE_REPO = "evernote-sync";
 	private EvernoteAccount evernoteAccount;
