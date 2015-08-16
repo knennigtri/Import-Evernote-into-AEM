@@ -14,10 +14,14 @@ import javax.jcr.Value;
 
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.wcm.api.Page;
+import com.day.cq.wcm.api.PageManager;
+import com.day.cq.wcm.api.WCMException;
 
 public class EvernoteAsset{
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -100,5 +104,18 @@ public class EvernoteAsset{
 			logger.info("Could not get tags");
 		}
 		return valArr;
+	}
+	
+	public String getAssetPagePath(ResourceResolver rr, Page curPage, Asset asset){
+		PageManager pm = rr.adaptTo(PageManager.class);
+		Page p = null;
+		try {
+			p = pm.create(curPage.getPath(), asset.getName(),
+					"/apps/evernote/templates/evernote-asset", asset.getName());
+		} catch (WCMException e) {
+			e.printStackTrace();
+		}
+		
+		return p.getPath();
 	}
 }

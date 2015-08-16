@@ -26,8 +26,12 @@ html {
     text-decoration: underline;
 }
 
- h1 {
+ h2 {
     color: #025c1f;
+}
+
+h1 {
+    color: darkslategrey;
 }
 
 .evernote-panel {
@@ -48,6 +52,9 @@ div.par {
     clear: both;
 }
 
+div.title{
+  align-content: center;  
+}
 
 div.evernote-metadata{
   margin: 10px;

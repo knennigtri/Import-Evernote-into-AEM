@@ -39,10 +39,6 @@
 			<!-- include the footer.html -->
 			<div data-sly-include="footer.html" data-sly-unwrap></div>
 		</div>
-
-		
-		<div data-sly-resource="${ @path='timing', resourceType='foundation/components/timing'}"></div>
-		<div data-sly-resource="${ @path='cloudservices', resourceType='cq/cloudserviceconfigs/components/servicecomponents'}"></div>
         <output data-sly-call="${clientLib.js @ categories='evernote'}" data-sly-unwrap></output>
 	</body>
 </html>

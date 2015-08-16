@@ -1,7 +1,7 @@
 <div id="${notEmpty ? 'evernote-component' : ''}" data-sly-use.ev="EViewer" data-sly-test.notEmpty="${ev.title}">
     <div class="evernote-metadata">
-      <h1>${ev.title || ''}</h1>
-	  <div id="left-col" >
+      <h2>${ev.title || ''}</h2>
+	  <div id="left-col">
         <p><b>Resource Accessed By:</b> 
             ${ev.noteFoundBy || ''}</p>
         <p><b>Original Resource:</b> 

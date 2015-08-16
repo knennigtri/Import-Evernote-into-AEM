@@ -22,6 +22,12 @@
                         fieldLabel="Evernote Asset:"
                         name="./fileReference"
                         rootPath="/content/dam/evernote-sync"/>
+                    <link-only
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/form/checkbox"
+                        fieldDescription="Check if you only want to show a link to the clipped note"
+                        text="Link to Evernote Asset Only?"
+                        name="./linkOnly"/>
                 </items>
             </column>
         </items>
