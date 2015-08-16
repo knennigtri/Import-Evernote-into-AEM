@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -26,7 +24,16 @@ public class EvernoteAsset{
 	public static final String TAG_NAMESPACE = "evernote";
 	private Asset asset;
 	private Node metadataNode;
-
+/**
+ * Creates an EvernoteAsset Object
+ * 
+ * <p>Contains all custom properties to an Evernote Asset and also contains an easy 
+ * method to get the metadata by string name
+ * 
+ * 
+ * @author Kevin Nennig (knennig213@gmail.com)
+ *
+ */	
 	public static class Properties{
 		public static final String NOTEBOOK_NAME = "notebook.name";
 		public static final String NOTBOOK_GUID = "notebook.guid";
@@ -87,7 +94,6 @@ public class EvernoteAsset{
 	public Value[] getTags(){
 		Value[] valArr = null;
 		try {
-			//FIXME get a string[] for the tags
 			Property p = metadataNode.getProperty("cq:tags");
 			valArr = p.getValues();
 		} catch (RepositoryException e) {

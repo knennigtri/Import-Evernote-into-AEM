@@ -79,7 +79,6 @@ public class EvernoteAccount {
 		try {
 			ss = noteStore.getSyncState();
 			int userChanges = ss.getUpdateCount();
-//			logger.debug("prevCount: " + lastSyncState + " || userChanges: " +userChanges);
 			//Check to see if any notes in the user account have changed
 			if(userChanges > lastSyncState){
 				NotesMetadataResultSpec spec = new NotesMetadataResultSpec();
@@ -109,7 +108,7 @@ public class EvernoteAccount {
 	}
 	
 	/**
-	 * Method to return a subset of notes based on a Evernote search.
+	 * Method to return a subset of notes based on a Evernote word search.
 	 * The Evernote grammar can be found from the link below.
 	 * https://dev.evernote.com/doc/articles/search_grammar.php
 	 * Example param: updated:day
@@ -127,6 +126,11 @@ public class EvernoteAccount {
 		return null;
 	}
 
+	/**
+	 * This gets all Evernote tags attached to the note
+	 * @param note - the note with the tags
+	 * @return - an array of tags in the form of strings
+	 */
 	public String[] getTagArray(Note note) {
 		List<String> tagList = new ArrayList<String>();
 			int numofTags = note.getTagGuidsSize();

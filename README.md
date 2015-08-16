@@ -2,9 +2,10 @@
 
 Evernote: [https://evernote.com/](https://evernote.com/)
 
-This is a proof of concept project. I wanted to be able to show how easily you can create custom importers or sync tools into the JCR. This project has a interface called ImporterService that can be used to create other third party integrations to import data.
+This is a proof of concept project. I wanted to be able to show how easily you can create custom importers or sync tools into the JCR.
 
 Any Evernote notes made with the [Evernote Web Clipper](https://evernote.com/webclipper/) within the last day will automatically be imported into /dam/evernote/<guid of the note> as an asset.
+This can be modified in the OSGi configurations of this project. Potentially anything form Evernote can be synced.
 
 You need to use a production Evernote dev token in order to access the Evernote account that's connected to the Web Clipper.
 
@@ -16,10 +17,11 @@ You need to use a production Evernote dev token in order to access the Evernote 
    * Check developer mode
    * Add your dev token
 4. Add some notes to your Evernote via webclipper
+	* Note images are currently not supported from Evernote
 5. Observe the notes being imported into AEM [content/dam/evernote-sync](http://localhost:4502/assets.html/content/dam/evernote-sync)
 6. Open [content/evernote/en.html](http://localhost:4502/editor.html/content/evernote/en.html)
    * Add the Evernote component to the page
-   * In the assetfinder change the group to "Evernote Notes"
+   * In the assetfinder change the group to "Evernote"
    * Drag and drop an Evernote Asset onto the page
 
 ## Modules
@@ -27,8 +29,7 @@ You need to use a production Evernote dev token in order to access the Evernote 
 The main parts are:
 
 * core: Java code to create the import from Evernote. 
-
- * Currently the integration works specifically with Evernote Clipper. 
+	* The demo of this project is for Evernote Clipper, but using the OSGi configs, you can sync anything from Evernote
 
      * [Download Evernote Web Clipper](https://evernote.com/webclipper/)
 	
@@ -41,15 +42,14 @@ The main parts are:
  ![OSGi Configs](images/screenshot_configurations.png)
 
 * ui.apps:
- * The main component is components/content/evernote
-   * Once Evernote assets are imported, they can be added to the evernote component via the AssetFinder under the group called "Evernote Notes"
+ * The main component is components/content/note-viewer
+   * Once Evernote assets are imported, they can be added to the evernote component via the AssetFinder under the group called "Evernote"
  * config nodes for custom logs, service user mapping, and this projects config
- * There are also some basic page and general components to use with the demo
 * ui.content: A basic website to use the Evernote component
 
 ## How to build
 
-To build all the modules run in the project root directory the following command with Maven 3:
+To build all the modules run in the project root directory the following command with Maven 3.2.5:
 
     mvn clean install
 
@@ -73,6 +73,5 @@ The project comes with the auto-public repository configured. To setup the repos
    
 ## Future Goals
 * Implement OAuth for authentication
-* Import the Evernote tags into AEM as cq:tags
 * Allow for a custom initial import
 * Ability to preview the imported Evernote note in /assets.html

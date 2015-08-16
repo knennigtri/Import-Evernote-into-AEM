@@ -33,20 +33,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Cron-job like task that gets executed regularly.
  * 
- * <p>Sync of Evernote notes into AEM on a regular basis. Currently this class is written to only
- * sync notes that are from the Evernote Web Clipper tool. This can easily be extended
+ * <p>Sync of Evernote notes into AEM on a regular basis. This can easily be extended
  * to allow for any types of notes to be added.
  * 
  * @author Kevin Nennig (knennig213@gmail.com)
  *
  */
-////TODO Create an initial sync option. Boolean for inital sync. String for initial query with words
-//@Component(immediate = true, metatype = true, label = "Evernote Configuration", description = "Basic sync task for Evernote")
-//@Service(value = Runnable.class)
-//
-//	// ***Dont change this value lower than 10 minutes since Evernote will throw an exception because the class is requesting too frequently.
-//@Property(name="scheduler.expression", value="*/20 * * * * ?") //Run every 10 minutes.
-
+//TODO Create an initial sync option. Boolean for inital sync. String for initial query with words
 @Component(immediate = true, metatype = true,
 label = "Evernote Sync Config")
 @Service(value = Runnable.class)
@@ -75,7 +68,7 @@ public class EvernoteSyncTask implements Runnable {
          * I have a personal EvernoteSyncTask config, that has a scheduler.expression property 
          * to run every 1 minute. Then along with this variable, the Evernote API is called
          * after 1 minute and then stops calling it. This is enough for debugging.
-         * TODO Forces sync to happen once
+         * FIXME Forces sync to happen once
          */
         if(isDevMode){
         	//Make sure there are search words for Evernote
@@ -116,7 +109,7 @@ public class EvernoteSyncTask implements Runnable {
         		logger.info("No search terms given.");
         	}
         	
-        	isDevMode = false; //TODO Forces sync to happen once
+        	isDevMode = false; //FIXME Forces sync to happen once
         }
     }
     
