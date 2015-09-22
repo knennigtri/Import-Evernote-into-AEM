@@ -61,7 +61,7 @@ public class EvernoteSyncTask implements Runnable {
 	 */
     @Override
     public void run() {
-        logger.debug("Running Evernote Sync Task...");
+        logger.info("Running Evernote Sync Task...");
         /* Used to force a 1 time import... without this, 
          * the Evernote API shuts off your connection to their cloud services...
          * Since Schedulers don't run initially and wait based on the scheduler.expression,
@@ -111,6 +111,7 @@ public class EvernoteSyncTask implements Runnable {
         	
         	isDevMode = false; //FIXME Forces sync to happen once
         }
+        logger.info("Evernote Sync Task finished.");
     }
     
     @Property(label = "Username", description = "Enter your Evernote Username")
@@ -152,5 +153,6 @@ public class EvernoteSyncTask implements Runnable {
         this.token = PropertiesUtil.toString(config.get(EV_TOKEN), "");
         this.isDevMode = PropertiesUtil.toBoolean(config.get(EV_DEV), false);
         this.searchList = PropertiesUtil.toStringArray(config.get(EV_SEARCHLIST), null);
+        run();
     }
 }

@@ -15,6 +15,7 @@ import javax.jcr.Value;
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.models.annotations.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.WCMException;
+
 
 public class EvernoteAsset{
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -44,11 +46,18 @@ public class EvernoteAsset{
 		public static final String NOTE_GUID = "note.guid";
 		public static final String NOTE_NAME = "note.title";
 		public static final String NOTE_UPDATED = "note.updatedOn";
-		public static final String NOTE_AUTHOR = "note.author";
-		public static final String NOTE_SOURCEAPP = "note.sourceapp";
-		public static final String NOTE_SOURCE = "note.source";
-		public static final String NOTE_SOURCEURL = "note.sourceurl";
 		public static final String NOTE_CREATED = "note.createdOn";
+		
+		public static final String NOTE_SOURCEAPP = "note.NoteAttributes.sourceapp";
+		public static final String NOTE_SOURCE = "note.NoteAttributes.source";
+		public static final String NOTE_SOURCEURL = "note.NoteAttributes.sourceurl";
+		public static final String NOTE_LATITUDE = "note.NoteAttributes.latitude";
+		public static final String NOTE_LONGITUDE = "note.NoteAttributes.longitude";
+		public static final String NOTE_ALTITUDE = "note.NoteAttributes.altitude";
+		public static final String NOTE_TIMESTAMP = "note.NoteAttributes.subjectDate";
+		
+		//Set by whoever is the owner of the Evernote account
+		public static final String NOTE_AUTHOR = "note.author";
 	}
 	
 	public EvernoteAsset(Resource resource){
@@ -84,6 +93,7 @@ public class EvernoteAsset{
 			logger.info("Could not get property: " + propName);
 		}
 		//If the property is a date, create the correct date string
+		//FIXME Date format doesn't work
 		if(propName.equals(Properties.NOTE_CREATED) || propName.equals(Properties.NOTE_UPDATED)){
 			long ts = System.currentTimeMillis();
 		    Date localTime = new Date(ts);

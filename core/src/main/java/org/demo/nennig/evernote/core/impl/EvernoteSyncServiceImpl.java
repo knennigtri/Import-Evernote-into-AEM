@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.AccessControlException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -30,6 +31,7 @@ import com.day.cq.tagging.Tag;
 import com.day.cq.tagging.TagManager;
 import com.evernote.edam.notestore.NoteList;
 import com.evernote.edam.type.Note;
+import com.evernote.edam.type.ResourceAttributes;
 
 /**
  * This class allows for Evernote notes to be synced to AEM. The Asset node structure is created as
@@ -178,10 +180,13 @@ public class EvernoteSyncServiceImpl {
 						curRes = resourceResolver.getResource(evFolderResource, guid);
 						//If the note does not exist in the JCR
 						if(curRes == null){
-							createResource(resourceResolver, nodeName, guid);
+							curRes = createResource(resourceResolver, nodeName, guid);
+							if(curRes != null){
+								logger.info("'" + curRes.getName() + "' created successfully");
+							}
 						}
 						else {
-							logger.info("Note already exists");
+							logger.debug("Note already exists");
 							//TODO Check to see if the resource should be updated
 //							if(curRes.getProperty(EvernoteAsset.Properties.NOTE_UPDATED).getLong() < note.getUpdated()){
 //								updateNode(curRes, guid);
@@ -207,14 +212,23 @@ public class EvernoteSyncServiceImpl {
 	 * @return - the newly created resource
 	 */
 	private Resource createResource(ResourceResolver rr, String newNodeName, String guid){
-		logger.debug("Creating note resource: '" + newNodeName + "'");
+		logger.info("Creating note resource: '" + newNodeName + "'");
 			
 		Note note = evernoteAccount.getNote(guid);
+//		ResourceAttributes ra = evernoteAccount.getResourceAttributes(guid);
+		
 		if(note != null){
 			InputStream inputStream = new ByteArrayInputStream(note.getContent().getBytes(Charset.forName("UTF-8")));
 			
 			AssetManager assetManager = rr.adaptTo(AssetManager.class);
 			Asset a = assetManager.createAsset("/content/dam/" + EVERNOTE_NODE_REPO + "/" + newNodeName,inputStream,"text/html",true);
+			
+			//get the subassets
+//			Iterator<com.evernote.edam.type.Resource> it = note.getResourcesIterator();
+//			if(it.hasNext()){
+//				
+//			}
+			
 			
 			Node parNode = null;
 			try {
@@ -284,18 +298,23 @@ public class EvernoteSyncServiceImpl {
 			//Properties for asset organization
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");
+			n.setProperty(EvernoteAsset.Properties.NOTE_AUTHOR, evernoteUsername);
 			n.setProperty(EvernoteAsset.Properties.NOTE_GUID, note.getGuid());
-			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
-			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCE, note.getAttributes().getSource());
-			
+
 			//Properties for Display
 			n.setProperty(EvernoteAsset.Properties.NOTE_NAME, note.getTitle());
 			n.setProperty(EvernoteAsset.Properties.NOTEBOOK_NAME, note.getNotebookGuid());
-			n.setProperty(EvernoteAsset.Properties.NOTE_AUTHOR, evernoteUsername);
-			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
 			n.setProperty(EvernoteAsset.Properties.NOTE_CREATED, note.getCreated());
 			n.setProperty(EvernoteAsset.Properties.NOTE_UPDATED, note.getUpdated());
-
+			
+			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
+			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCE, note.getAttributes().getSource());
+			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEURL, note.getAttributes().getSourceURL());
+			n.setProperty(EvernoteAsset.Properties.NOTE_LATITUDE, note.getAttributes().getLatitude());
+			n.setProperty(EvernoteAsset.Properties.NOTE_LONGITUDE, note.getAttributes().getLongitude());
+			n.setProperty(EvernoteAsset.Properties.NOTE_ALTITUDE, note.getAttributes().getAltitude());
+			n.setProperty(EvernoteAsset.Properties.NOTE_TIMESTAMP, note.getAttributes().getSubjectDate());
+			
 			logger.info("added metadata to: " + n.getPath());
 			return n;
 	}
