@@ -126,6 +126,7 @@
                 <version>2.9</version>
                 <configuration>
                     <downloadSources>true</downloadSources>
+                 	<downloadJavadocs>true</downloadJavadocs>
                 </configuration>
             </plugin>
             <!-- JSP and tablib autocomplete -->
@@ -594,6 +595,14 @@
             <type>pom</type>
             <scope>import</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.models.api</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
         </dependencies>
     </dependencyManagement>
 

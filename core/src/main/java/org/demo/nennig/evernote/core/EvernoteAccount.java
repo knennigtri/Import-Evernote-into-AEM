@@ -19,6 +19,7 @@ import com.evernote.edam.notestore.NotesMetadataList;
 import com.evernote.edam.notestore.NotesMetadataResultSpec;
 import com.evernote.edam.notestore.SyncState;
 import com.evernote.edam.type.Note;
+import com.evernote.edam.type.ResourceAttributes;
 import com.evernote.edam.type.Tag;
 import com.evernote.thrift.TException;
 
@@ -72,6 +73,24 @@ public class EvernoteAccount {
 			logger.error("Error getting Note: " + e);
 		}
 		return n;
+	}
+	
+	public ResourceAttributes getResourceAttributes(String guid){
+		ResourceAttributes ra = null;
+		
+		try {
+			ra = noteStore.getResourceAttributes(guid);
+		} catch (EDAMUserException e) {
+			logger.error("Error getting resource attributes: " + e);
+		} catch (EDAMSystemException e) {
+			logger.error("Error getting resource attributes: " + e);
+		} catch (EDAMNotFoundException e) {
+			logger.error("Error getting resource attributes: " + e);
+		} catch (TException e) {
+			logger.error("Error getting resource attributes: " + e);
+		}
+		
+		return ra;
 	}
 	
 	public boolean newNotesToSync(String words){
