@@ -4,9 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.AccessControlException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -298,15 +301,26 @@ public class EvernoteSyncServiceImpl {
 			//Properties for asset organization
 			n.setProperty("dc:title", note.getTitle());
 			n.setProperty("xmp:CreatorTool", "EvernoteSyncTool");
-			n.setProperty(EvernoteAsset.Properties.NOTE_AUTHOR, evernoteUsername);
 			n.setProperty(EvernoteAsset.Properties.NOTE_GUID, note.getGuid());
+			
+			//Set Author
+			if((note.getAttributes().getAuthor() == null) || note.getAttributes().getAuthor().isEmpty()){
+				n.setProperty(EvernoteAsset.Properties.NOTE_AUTHOR, evernoteUsername);
+			}else{
+				n.setProperty(EvernoteAsset.Properties.NOTE_AUTHOR, note.getAttributes().getAuthor());
+			}
 
 			//Properties for Display
 			n.setProperty(EvernoteAsset.Properties.NOTE_NAME, note.getTitle());
 			n.setProperty(EvernoteAsset.Properties.NOTEBOOK_NAME, note.getNotebookGuid());
-			n.setProperty(EvernoteAsset.Properties.NOTE_CREATED, note.getCreated());
-			n.setProperty(EvernoteAsset.Properties.NOTE_UPDATED, note.getUpdated());
 			
+			//Set calendar dates to import
+			Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+			calendar.setTimeInMillis(note.getCreated());	
+			n.setProperty(EvernoteAsset.Properties.NOTE_CREATED, calendar);
+			calendar.setTimeInMillis(note.getUpdated());	
+			n.setProperty(EvernoteAsset.Properties.NOTE_UPDATED, calendar);
+
 			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEAPP, note.getAttributes().getSourceApplication());
 			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCE, note.getAttributes().getSource());
 			n.setProperty(EvernoteAsset.Properties.NOTE_SOURCEURL, note.getAttributes().getSourceURL());

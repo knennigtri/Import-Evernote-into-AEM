@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -87,20 +90,29 @@ public class EvernoteAsset{
 	
 	public String getMetadata(String propName){
 		String str = "";
-		try {
-			str = JcrUtils.getStringProperty(metadataNode, propName, "");
-		} catch (RepositoryException e) {
-			logger.info("Could not get property: " + propName);
-		}
+		
 		//If the property is a date, create the correct date string
 		//FIXME Date format doesn't work
-		if(propName.equals(Properties.NOTE_CREATED) || propName.equals(Properties.NOTE_UPDATED)){
-			long ts = System.currentTimeMillis();
-		    Date localTime = new Date(ts);
-		    Date utcTime = new Date();
-		    // Convert UTC to Local Time
-		    Date fromGmt = new Date(utcTime.getTime() + TimeZone.getDefault().getOffset(localTime.getTime()));
-			str =  fromGmt.toString();
+		if(propName.equals(Properties.NOTE_CREATED) 
+		|| propName.equals(Properties.NOTE_UPDATED)
+		|| propName.equals("dam:extracted")
+		|| propName.equals("dc:modified")
+		|| propName.equals("jcr:lastModified")){
+			Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+			try {
+				cal = JcrUtils.getDateProperty(metadataNode, propName, null);
+			} catch (RepositoryException e) {
+				logger.info("Could not get property: " + propName);
+			}
+			SimpleDateFormat formatter=new SimpleDateFormat("EEE, d MMMMM yyyy HH:mm a z"); 
+			str = formatter.format(cal.getTime());
+		}
+		else {
+			try {
+				str = JcrUtils.getStringProperty(metadataNode, propName, "");
+			} catch (RepositoryException e) {
+				logger.info("Could not get property: " + propName);
+			}
 		}
 		return str;
 	}
