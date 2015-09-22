@@ -61,7 +61,7 @@ public class EvernoteAccount {
 	public Note getNote(String guid){
 		Note n = null;
 		try {
-			n = noteStore.getNote(guid, true, true, false, false);
+			n = noteStore.getNote(guid, true, true, true, true);
 		} catch (EDAMUserException e) {
 			logger.error("Error getting Note: " + e);
 		} catch (EDAMSystemException e) {

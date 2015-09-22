@@ -10,16 +10,18 @@ This can be modified in the OSGi configurations of this project. Potentially any
 You need to use a production Evernote dev token in order to access the Evernote account that's connected to the Web Clipper.
 
 ## How to use
-1. [Install this project via maven](README.md#how-to-build)
+1. Start AEM
+  * cmd example: $ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=10123 -jar aem-author-4502.jar -p 4502 -r author -nofork -gui
+2. [Install this project via maven](README.md#how-to-build)
    * Or you can install the [UI Content Package](ui.content/target/evernote.ui.content-0.0.1-SNAPSHOT.zip) and [UI Apps Package](ui.apps/target/evernote.ui.apps-0.0.1-SNAPSHOT.zip) via [Package Manager](http://localhost:4502/crx/packmgr/index.jsp)
-2. Setup a [production Evernote dev token](https://dev.evernote.com/doc/articles/dev_tokens.php)
-3. In system/console/configMgr setup the configuration called "Evernote Configuration"
+3. Setup a [production Evernote dev token](https://dev.evernote.com/doc/articles/dev_tokens.php)
+4. In system/console/configMgr setup the configuration called "Evernote Configuration"
    * Check developer mode
    * Add your dev token
-4. Add some notes to your Evernote via webclipper
+5. Add some notes to your Evernote via webclipper
 	* Note images are currently not supported from Evernote
-5. Observe the notes being imported into AEM [content/dam/evernote-sync](http://localhost:4502/assets.html/content/dam/evernote-sync)
-6. Open [content/evernote/en.html](http://localhost:4502/editor.html/content/evernote/en.html)
+6. Observe the notes being imported into AEM [content/dam/evernote-sync](http://localhost:4502/assets.html/content/dam/evernote-sync)
+7. Open [content/evernote/en.html](http://localhost:4502/editor.html/content/evernote/en.html)
    * Add the Evernote component to the page
    * In the assetfinder change the group to "Evernote"
    * Drag and drop an Evernote Asset onto the page
@@ -73,5 +75,9 @@ The project comes with the auto-public repository configured. To setup the repos
    
 ## Future Goals
 * Implement OAuth for authentication
-* Allow for a custom initial import
+* Note updates from Evernote
+* Multiple Evernote Accounts to connect
+* basic image import from Evernote
+* Metadata template to show/edit all metadata from Evernote in Assets console
 * Ability to preview the imported Evernote note in /assets.html
+ * Same preview image available in the assetfinder as a thumbnail
