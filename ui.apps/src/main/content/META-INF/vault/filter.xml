@@ -3,7 +3,9 @@
     <filter root="/apps/evernote">
         <exclude pattern="/apps/evernote/install" />
     </filter>
-    <filter root="/apps/sling" />
+    <filter root="/apps/dam/content/schemaeditors/forms/evernote"/>
+    
     <filter root="/etc/designs/evernote"/>
     <filter root="/home/users/system/evernote"/>
+    
 </workspaceFilter>

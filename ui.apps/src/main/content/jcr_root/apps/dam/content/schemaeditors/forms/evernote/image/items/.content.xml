@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured">
+    <tabs
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/foundation/container">
+        <items jcr:primaryType="nt:unstructured">
+            <tab1
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Basic"
+                sling:resourceType="granite/ui/components/foundation/section"
+                tabid="f84cc8d6-60ab-474e-bdf8-a0b7a434f289">
+                <items jcr:primaryType="nt:unstructured">
+                    <col1
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container">
+                        <items jcr:primaryType="nt:unstructured">
+                            <width
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/textfield"
+                                disabled="{Boolean}true"
+                                fieldLabel="Width"
+                                id="Key-1380290948315"
+                                max="{Double}10000.0"
+                                metaType="number"
+                                min="{Double}0.0"
+                                name="./jcr:content/metadata/tiff:ImageWidth"
+                                renderReadOnly="{Boolean}true"
+                                typeHint="Long"/>
+                            <height
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/textfield"
+                                disabled="{Boolean}true"
+                                fieldLabel="Height"
+                                id="Key-1380291070446"
+                                max="{Double}10000.0"
+                                metaType="number"
+                                min="{Double}0.0"
+                                name="./jcr:content/metadata/tiff:ImageLength"
+                                renderReadOnly="{Boolean}true"
+                                typeHint="Long"/>
+                        </items>
+                    </col1>
+                    <col2
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                    <col3
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                </items>
+            </tab1>
+            <tab2
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Advanced"
+                sling:resourceType="granite/ui/components/foundation/section"
+                tabid="7c927721-1473-492f-b949-4fa2f82a32a0">
+                <items jcr:primaryType="nt:unstructured">
+                    <col1
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                    <col2
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                    <col3
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                </items>
+            </tab2>
+            <tab3
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Product Data"
+                sling:resourceType="granite/ui/components/foundation/section"
+                class="cq-dam-asset-metadata-productInfo"
+                listOrder="2"
+                tabid="fd782b72-94dc-4361-8657-c888e77ec4da">
+                <items jcr:primaryType="nt:unstructured">
+                    <col1
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"
+                        listOrder="0"/>
+                    <col2
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"
+                        listOrder="1">
+                        <items jcr:primaryType="nt:unstructured">
+                            <_x0031_387365236284
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="dam/gui/components/admin/pim"
+                                fieldLabel="Product References"
+                                metaType="pim"
+                                name="./jcr:content/metadata/dq:productReference"
+                                renderReadOnly="true"/>
+                        </items>
+                    </col2>
+                    <col3
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"
+                        listOrder="2"/>
+                </items>
+            </tab3>
+        </items>
+        <layout
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/foundation/layouts/tabs"
+            type="nav"/>
+    </tabs>
+</jcr:root>

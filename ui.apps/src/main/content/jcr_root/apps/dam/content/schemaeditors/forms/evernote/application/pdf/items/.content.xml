@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured">
+    <tabs
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/foundation/container">
+        <items jcr:primaryType="nt:unstructured">
+            <tab1
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Basic"
+                sling:resourceType="granite/ui/components/foundation/section"
+                tabid="f84cc8d6-60ab-474e-bdf8-a0b7a434f289">
+                <items jcr:primaryType="nt:unstructured">
+                    <col1
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container">
+                        <items jcr:primaryType="nt:unstructured">
+                            <pdftitle
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/textfield"
+                                fieldLabel="Pdf Title"
+                                id="Key-1380292819020"
+                                metaType="text"
+                                name="./jcr:content/metadata/pdf:Title"
+                                renderReadOnly="{Boolean}true"/>
+                            <subject
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/foundation/form/textfield"
+                                fieldLabel="Subject"
+                                id="Key-1380292821756"
+                                metaType="text"
+                                name="./jcr:content/metadata/dc:subject"
+                                renderReadOnly="{Boolean}true"/>
+                        </items>
+                    </col1>
+                    <col2
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                    <col3
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                </items>
+            </tab1>
+            <tab2
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Advanced"
+                sling:resourceType="granite/ui/components/foundation/section"
+                tabid="7c927721-1473-492f-b949-4fa2f82a32a0">
+                <items jcr:primaryType="nt:unstructured">
+                    <col1
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                    <col2
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                    <col3
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/foundation/container"/>
+                </items>
+            </tab2>
+        </items>
+        <layout
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="granite/ui/components/foundation/layouts/tabs"
+            type="nav"/>
+    </tabs>
+</jcr:root>

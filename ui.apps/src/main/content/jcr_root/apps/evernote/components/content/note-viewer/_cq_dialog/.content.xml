@@ -26,8 +26,8 @@
                         jcr:primaryType="nt:unstructured"
                         sling:resourceType="granite/ui/components/foundation/form/checkbox"
                         fieldDescription="Check if you only want to show a link to the clipped note"
-                        text="Link to Evernote Asset Only?"
-                        name="./linkOnly"/>
+                        name="./linkOnly"
+                        text="Link to Evernote Asset Only?"/>
                 </items>
             </column>
         </items>
