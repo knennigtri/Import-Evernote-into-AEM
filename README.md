@@ -78,6 +78,5 @@ The project comes with the auto-public repository configured. To setup the repos
 * Note updates from Evernote
 * Multiple Evernote Accounts to connect
 * basic image import from Evernote
-* Metadata template to show/edit all metadata from Evernote in Assets console
 * Ability to preview the imported Evernote note in /assets.html
  * Same preview image available in the assetfinder as a thumbnail
